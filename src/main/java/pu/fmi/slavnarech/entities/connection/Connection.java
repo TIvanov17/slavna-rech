@@ -7,10 +7,19 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.List;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import pu.fmi.slavnarech.entities.member.Member;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Connection {
 
@@ -29,4 +38,7 @@ public class Connection {
   private ConnectionType connectionType;
 
   private boolean isActive;
+
+  @OneToMany(mappedBy = "connection")
+  private List<Member> members;
 }

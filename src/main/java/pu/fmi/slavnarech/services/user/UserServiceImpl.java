@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
     User user = userMapper.mapToEntity(userRequest);
     return userMapper.mapToResponseDTO(userRepository.save(user));
   }
+
+  @Override
+  public User getUserById(Long id) {
+    return this.userRepository.findById(id).orElse(null);
+  }
 }

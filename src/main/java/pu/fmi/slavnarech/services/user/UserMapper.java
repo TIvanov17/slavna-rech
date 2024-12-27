@@ -15,6 +15,7 @@ public class UserMapper {
         .email(userRequest.getEmail())
         .password("")
         .createdOn(LocalDate.now())
+        .isActive(Boolean.TRUE)
         .build();
   }
 
@@ -23,8 +24,8 @@ public class UserMapper {
         .id(user.getId())
         .username(user.getUsername())
         .email(user.getEmail())
-        .isActive(user.isActive())
         .createdOn(user.getCreatedOn())
+        .isActive(user.isActive())
         .build();
   }
 }

@@ -6,12 +6,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import pu.fmi.slavnarech.entities.connection.Connection;
 import pu.fmi.slavnarech.entities.role.Role;
 import pu.fmi.slavnarech.entities.user.User;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 public class Member {
 

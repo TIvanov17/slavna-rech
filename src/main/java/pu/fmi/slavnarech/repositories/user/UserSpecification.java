@@ -2,6 +2,7 @@ package pu.fmi.slavnarech.repositories.user;
 
 import org.springframework.data.jpa.domain.Specification;
 import pu.fmi.slavnarech.entities.user.User;
+import pu.fmi.slavnarech.entities.user.User_;
 
 public class UserSpecification {
 
@@ -9,9 +10,11 @@ public class UserSpecification {
 
     return ((root, query, criteriaBuilder) -> {
       String pattern = username != null ? "%" + username + "%" : "%%";
-      return criteriaBuilder.or(
-          criteriaBuilder.like(root.get("username"), pattern),
-          criteriaBuilder.like(root.get("email"), pattern));
+      return criteriaBuilder.and(
+          criteriaBuilder.isTrue(root.get(User_.isActive)),
+          criteriaBuilder.or(
+              criteriaBuilder.like(root.get(User_.username), pattern),
+              criteriaBuilder.like(root.get(User_.email), pattern)));
     });
   }
 }

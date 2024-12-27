@@ -4,8 +4,8 @@ import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
 
-@Builder
 @Data
+@Builder
 public class UserResponse {
 
   private Long id;

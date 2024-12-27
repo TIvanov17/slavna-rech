@@ -1,4 +1,4 @@
-package pu.fmi.slavnarech.entities;
+package pu.fmi.slavnarech.entities.member;
 
 import jakarta.persistence.Embeddable;
 import java.io.Serializable;
@@ -13,5 +13,4 @@ public class MemberId implements Serializable {
   private Long userId;
 
   private Long connectionId;
-
 }

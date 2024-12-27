@@ -1,4 +1,4 @@
-package pu.fmi.slavnarech.entities;
+package pu.fmi.slavnarech.entities.message;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.Data;
+import pu.fmi.slavnarech.entities.member.Member;
 
 @Data
 @Entity

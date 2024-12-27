@@ -1,4 +1,4 @@
-package pu.fmi.slavnarech.entities;
+package pu.fmi.slavnarech.entities.member;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
@@ -7,13 +7,15 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.MapsId;
 import java.time.LocalDate;
 import lombok.Data;
+import pu.fmi.slavnarech.entities.connection.Connection;
+import pu.fmi.slavnarech.entities.role.Role;
+import pu.fmi.slavnarech.entities.user.User;
 
 @Data
 @Entity
 public class Member {
 
-  @EmbeddedId
-  private MemberId id;
+  @EmbeddedId private MemberId id;
 
   @MapsId("userId")
   @ManyToOne

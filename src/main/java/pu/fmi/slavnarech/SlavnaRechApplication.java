@@ -6,8 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SlavnaRechApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SlavnaRechApplication.class, args);
-	}
-
+  public static void main(String[] args) {
+    SpringApplication.run(SlavnaRechApplication.class, args);
+  }
 }

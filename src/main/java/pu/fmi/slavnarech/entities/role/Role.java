@@ -1,4 +1,4 @@
-package pu.fmi.slavnarech.entities;
+package pu.fmi.slavnarech.entities.role;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

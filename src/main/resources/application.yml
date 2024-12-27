@@ -3,7 +3,7 @@ spring:
     name: SlavnaRech
 
   datasource:
-    url: jdbc:h2:mem:slavna-rech
+    url: jdbc:h2:mem:slavna-rech;NON_KEYWORDS=user
     driver-class-name: org.h2.Driver
     username: sa
     password: ""

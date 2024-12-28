@@ -1,6 +1,8 @@
 package pu.fmi.slavnarech.services.user;
 
+import java.util.List;
 import org.springframework.data.domain.Page;
+import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.user.User;
 import pu.fmi.slavnarech.entities.user.dtos.UserRequest;
 import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
@@ -12,5 +14,9 @@ public interface UserService {
 
   UserResponse saveUser(UserRequest userRequest);
 
-  User getUserById(Long id);
+  User getById(Long id);
+
+  boolean changeStatusOfFriendRequest(Long id, Long connectionId, MemberStatus status);
+
+  List<UserResponse> getFriendsOfUser(Long id);
 }

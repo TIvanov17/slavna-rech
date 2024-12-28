@@ -32,6 +32,7 @@ public class MemberFactory {
         .joinDate(member.getJoinDate())
         .isActive(member.isActive())
         .role(member.getRole().getName())
+        .status(member.getStatus())
         .build();
   }
 }

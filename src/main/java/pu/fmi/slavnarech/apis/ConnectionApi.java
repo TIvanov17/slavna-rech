@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pu.fmi.slavnarech.annotations.ValidRestApi;
-import pu.fmi.slavnarech.entities.connection.ChannelConnectionRequest;
+import pu.fmi.slavnarech.entities.connection.dtos.ChannelConnectionRequest;
 import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
+import pu.fmi.slavnarech.entities.connection.dtos.FriendConnectionRequest;
 import pu.fmi.slavnarech.services.connection.ConnectionService;
 
 @ValidRestApi("api/v1/connection")
@@ -22,6 +23,15 @@ public class ConnectionApi {
   public ResponseEntity<ConnectionResponse> createChannel(
       @Valid @RequestBody ChannelConnectionRequest channelConnectionRequest) {
     return ResponseEntity.ok(connectionService.createChannel(channelConnectionRequest));
+  }
+
+  @PostMapping("/friend")
+  public ResponseEntity<ConnectionResponse> createFriendRequest(
+      @Valid @RequestBody FriendConnectionRequest friendConnectionRequest) {
+
+    return ResponseEntity.ok(
+        connectionService.createFriendConnectionRequest(
+            friendConnectionRequest.getSenderId(), friendConnectionRequest.getReceiverId()));
   }
 
   @GetMapping("/{id}")

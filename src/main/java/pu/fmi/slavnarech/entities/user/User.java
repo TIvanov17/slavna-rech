@@ -5,11 +5,14 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import java.time.LocalDate;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pu.fmi.slavnarech.entities.member.Member;
 
 @Data
 @Builder
@@ -32,4 +35,7 @@ public class User {
   private LocalDate createdOn;
 
   private boolean isActive;
+
+  @OneToMany(mappedBy = "user")
+  private List<Member> members;
 }

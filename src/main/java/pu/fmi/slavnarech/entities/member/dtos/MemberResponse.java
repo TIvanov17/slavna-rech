@@ -3,6 +3,7 @@ package pu.fmi.slavnarech.entities.member.dtos;
 import java.time.LocalDate;
 import lombok.Builder;
 import lombok.Data;
+import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.role.RoleName;
 
 @Data
@@ -20,4 +21,6 @@ public class MemberResponse {
   private RoleName role;
 
   private boolean isActive;
+
+  private MemberStatus status;
 }

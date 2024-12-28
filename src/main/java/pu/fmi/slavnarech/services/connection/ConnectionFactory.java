@@ -3,8 +3,8 @@ package pu.fmi.slavnarech.services.connection;
 import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import pu.fmi.slavnarech.entities.connection.ChannelConnectionRequest;
 import pu.fmi.slavnarech.entities.connection.Connection;
+import pu.fmi.slavnarech.entities.connection.ConnectionType;
 import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
 import pu.fmi.slavnarech.services.member.MemberFactory;
 
@@ -13,11 +13,11 @@ public class ConnectionFactory {
 
   @Autowired private MemberFactory memberFactory;
 
-  public Connection mapToEntity(ChannelConnectionRequest channelConnectionRequest) {
+  public Connection mapToEntity(String name, String description, ConnectionType connectionType) {
     return Connection.builder()
-        .name(channelConnectionRequest.getName())
-        .description(channelConnectionRequest.getDescription())
-        .connectionType(channelConnectionRequest.getConnectionType())
+        .name(name)
+        .description(description)
+        .connectionType(connectionType)
         .createdOn(LocalDate.now())
         .isActive(Boolean.TRUE)
         .build();

@@ -14,8 +14,6 @@ public class UserResponse {
 
   private String email;
 
-  private String password;
-
   private LocalDate createdOn;
 
   private boolean isActive;

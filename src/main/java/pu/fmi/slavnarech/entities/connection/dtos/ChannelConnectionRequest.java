@@ -1,8 +1,9 @@
-package pu.fmi.slavnarech.entities.connection;
+package pu.fmi.slavnarech.entities.connection.dtos;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import pu.fmi.slavnarech.entities.connection.ConnectionType;
 
 @Data
 public class ChannelConnectionRequest {

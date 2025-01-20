@@ -1,0 +1,23 @@
+<text-input></text-input>
+<ul
+  ngbNav
+  #nav="ngbNav"
+  [(activeId)]="active"
+  [destroyOnHide]="false"
+  class="nav-tabs"
+>
+  <li [ngbNavItem]="2">
+    <button ngbNavLink>Friends</button>
+    <ng-template ngbNavContent>
+      <sidebar [collection]="friends"></sidebar>
+    </ng-template>
+  </li>
+  <li [ngbNavItem]="1" [destroyOnHide]="true">
+    <button ngbNavLink>Channels</button>
+    <ng-template ngbNavContent>
+      <sidebar [collection]="friends"></sidebar>
+    </ng-template>
+  </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>

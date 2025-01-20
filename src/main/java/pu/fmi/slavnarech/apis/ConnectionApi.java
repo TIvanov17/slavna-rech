@@ -3,6 +3,7 @@ package pu.fmi.slavnarech.apis;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import pu.fmi.slavnarech.entities.connection.dtos.FriendConnectionRequest;
 import pu.fmi.slavnarech.services.connection.ConnectionService;
 
 @ValidRestApi("api/v1/connection")
+@CrossOrigin("http://localhost:4200/")
 public class ConnectionApi {
 
   @Autowired private ConnectionService connectionService;

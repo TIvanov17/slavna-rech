@@ -1,0 +1,18 @@
+<h1>Channels</h1>
+<div class="container">
+  <div class="sidebar-container">
+    <tabs [friends]="users"></tabs>
+  </div>
+  <div class="content-container">
+    <h2>WebSocket Chat</h2>
+    <ul class="message-list">
+      @for(message of messages; track message) {
+      <li>{{ message }}</li>
+      }
+    </ul>
+    <div class="message-input">
+      <input [(ngModel)]="message" placeholder="Type a message" />
+      <button (click)="sendMessage()">Send</button>
+    </div>
+  </div>
+</div>

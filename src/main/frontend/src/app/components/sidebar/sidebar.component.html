@@ -1,0 +1,7 @@
+<div class="sidebar">
+  <ul class="nav">
+    @for(user of collection; track user) {
+    <li class="nav-item">{{ user.username }} - {{ user.email }}</li>
+    }
+  </ul>
+</div>

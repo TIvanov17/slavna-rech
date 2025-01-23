@@ -4,6 +4,9 @@ export type UserRequest = {
 };
 
 export type UserResponse = {
+  id: number;
   username: string;
   email: string;
+  createdOn: Date;
+  isActive: boolean;
 };

@@ -1,16 +1,17 @@
 package pu.fmi.slavnarech.services.security;
 
-import org.springframework.security.core.userdetails.UserDetails;
+import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
 import pu.fmi.slavnarech.entities.user.security.AuthenticationRequest;
 import pu.fmi.slavnarech.entities.user.security.AuthenticationResponse;
+import pu.fmi.slavnarech.entities.user.security.RegistrationRequest;
 
 public interface AuthenticationService {
 
-  AuthenticationResponse register(AuthenticationRequest authRequest);
+  AuthenticationResponse register(RegistrationRequest registrationRequest);
 
   AuthenticationResponse authenticate(AuthenticationRequest authRequest);
 
-  AuthenticationResponse getRefreshToken(String refreshToken);
+  AuthenticationResponse refreshToken(String refreshToken);
 
-  UserDetails getCurrentLoggedInUser();
+  UserResponse getCurrentLoggedInUser();
 }

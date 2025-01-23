@@ -4,8 +4,6 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pu.fmi.slavnarech.annotations.TransactionalService;
 import pu.fmi.slavnarech.entities.connection.Connection;
@@ -22,7 +20,7 @@ import pu.fmi.slavnarech.repositories.user.UserSpecification;
 import pu.fmi.slavnarech.utils.PageFilter;
 
 @TransactionalService
-public class UserServiceImpl implements UserService, UserDetailsService {
+public class UserServiceImpl implements UserService {
 
   @Autowired private UserRepository userRepository;
 
@@ -43,8 +41,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Override
   public UserResponse saveUser(UserRequest userRequest) {
-    User user = userMapper.mapToEntity(userRequest);
+    User user = userMapper.mapToEntity(userRequest.getUsername(), userRequest.getEmail(), "");
     return userMapper.mapToResponseDTO(userRepository.save(user));
+  }
+
+  @Override
+  public User registerUser(String username, String email, String password) {
+    User user = userMapper.mapToEntity(username, email, password);
+    return userRepository.save(user);
   }
 
   @Override
@@ -82,7 +86,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    return this.loadUserByEmail(username);
+  public User loadUserByUsername(String username) throws UsernameNotFoundException {
+    return this.userRepository.findByUsername(username);
   }
 }

@@ -1,26 +1,33 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { AuthenticationRequest } from '../../../models/authentication.models';
+import {
+  AuthenticationRequest,
+  RegistrationRequest,
+} from '../../../models/authentication.models';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../services/authentication.service';
 
 @Component({
   standalone: true,
   selector: 'login',
-  templateUrl: './login.component.html',
+  templateUrl: './registration.component.html',
   imports: [FormsModule, CommonModule],
 })
-export class LoginPage {
-  authRequest: AuthenticationRequest = { username: '', password: '' };
+export class RegisterPage {
+  registrationRequest: RegistrationRequest = {
+    username: '',
+    email: '',
+    password: '',
+  };
   errorMessages: String[] = [];
 
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
 
-  public login() {
+  public register() {
     this.errorMessages = [];
-    this.authenticationService.authenticate(this.authRequest).subscribe({
+    this.authenticationService.register(this.registrationRequest).subscribe({
       next: (response) => {
         localStorage.setItem('auth_token', response.token);
         this.router.navigate(['channels']);
@@ -31,7 +38,7 @@ export class LoginPage {
     });
   }
 
-  public register() {
-    this.router.navigate(['register']);
+  public login() {
+    this.router.navigate(['login']);
   }
 }

@@ -16,6 +16,8 @@ public interface UserService {
 
   User getById(Long id);
 
+  User loadUserByEmail(String email);
+
   boolean changeStatusOfFriendRequest(Long id, Long connectionId, MemberStatus status);
 
   List<UserResponse> getFriendsOfUser(Long id);

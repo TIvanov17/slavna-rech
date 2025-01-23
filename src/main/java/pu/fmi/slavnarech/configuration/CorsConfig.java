@@ -18,11 +18,11 @@ public class CorsConfig {
   @Value("${web.cors.allowed-methods}")
   private List<String> allowedMethods;
 
-  @Value("${web.cors.max-age}")
-  private Long maxAge;
-
   @Value("${web.cors.allowed-headers}")
   private List<String> allowedHeaders;
+
+  @Value("${web.cors.max-age}")
+  private Long maxAge;
 
   @Value("${web.cors.exposed-headers}")
   private List<String> exposedHeaders;
@@ -37,9 +37,9 @@ public class CorsConfig {
     corsConfiguration.setAllowedOrigins(allowedOrigins);
     corsConfiguration.setAllowedMethods(allowedMethods);
     corsConfiguration.setAllowedHeaders(allowedHeaders);
-    corsConfiguration.setAllowCredentials(shouldAllowCredentials);
     corsConfiguration.setMaxAge(maxAge);
     corsConfiguration.setExposedHeaders(exposedHeaders);
+    corsConfiguration.setAllowCredentials(shouldAllowCredentials);
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", corsConfiguration);
 

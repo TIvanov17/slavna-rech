@@ -4,6 +4,9 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pu.fmi.slavnarech.annotations.TransactionalService;
 import pu.fmi.slavnarech.entities.connection.Connection;
 import pu.fmi.slavnarech.entities.member.Member;
@@ -19,7 +22,7 @@ import pu.fmi.slavnarech.repositories.user.UserSpecification;
 import pu.fmi.slavnarech.utils.PageFilter;
 
 @TransactionalService
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl implements UserService, UserDetailsService {
 
   @Autowired private UserRepository userRepository;
 
@@ -50,6 +53,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public User loadUserByEmail(String email) {
+    return userRepository.findByEmail(email);
+  }
+
+  @Override
   public boolean changeStatusOfFriendRequest(Long id, Long connectionId, MemberStatus status) {
 
     User user = getById(id);
@@ -71,5 +79,10 @@ public class UserServiceImpl implements UserService {
     return userRepository.findAll(UserSpecification.hasFriends(id)).stream()
         .map(user -> userMapper.mapToResponseDTO(user))
         .toList();
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    return this.loadUserByEmail(username);
   }
 }

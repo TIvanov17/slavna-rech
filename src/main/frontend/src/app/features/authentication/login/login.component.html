@@ -1,0 +1,36 @@
+<div class="login-container">
+
+    <h3 class="login-title">Login</h3>
+    
+    <div class="login-errors" role="alert" *ngIf="errorMessages.length">
+        <p *ngFor="let errorMessage of errorMessages">{{errorMessage}}</p>
+    </div>
+
+    <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input [(ngModel)]="authRequest.email" 
+                type="email" 
+                class="form-control" 
+                id="email" 
+                placeholder="Enter email">
+    </div>
+    <div class="mb-3">
+        <label for="password" class="form-label">Password</label>
+        <input [(ngModel)]="authRequest.password" 
+                type="password" class="form-control" 
+                id="password" 
+                placeholder="Enter password">
+    </div>
+
+    <div class="">
+        <button (click)="login()" type="button" class="btn btn-primary">
+            <em class="">Sign In</em>
+        </button>
+        <div class="">
+            Don't have an account?
+            <button (click)="register()" type="button" class="btn btn-primary">
+                <em class="">Register In</em>
+            </button>
+        </div>
+    </div>
+</div>

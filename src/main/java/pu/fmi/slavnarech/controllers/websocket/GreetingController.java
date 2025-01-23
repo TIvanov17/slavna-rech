@@ -10,9 +10,8 @@ public class GreetingController {
 
   @MessageMapping("/hello")
   @SendTo("/topic/greeting")
-  public String greeting(String message){
+  public String greeting(String message) {
     System.out.println("Received message: " + message);
     return HtmlUtils.htmlEscape(message);
   }
-
 }

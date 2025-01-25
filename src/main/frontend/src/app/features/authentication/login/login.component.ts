@@ -22,6 +22,10 @@ export class LoginPage {
     this.errorMessages = [];
     this.authenticationService.authenticate(this.authRequest).subscribe({
       next: (response) => {
+        if (response == null) {
+          console.log('User not found!');
+          return;
+        }
         localStorage.setItem('auth_token', response.token);
         this.router.navigate(['channels']);
       },

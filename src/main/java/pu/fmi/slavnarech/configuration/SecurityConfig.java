@@ -7,6 +7,7 @@ import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer.FrameOptionsConfig;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -29,7 +30,10 @@ public class SecurityConfig {
                 auth.requestMatchers("/api/v1/**")
                     .authenticated()
                     .requestMatchers(
+                        "/h2-console/**",
                         "/",
+                        "/auth/login",
+                        "/auth/register",
                         "/index.html",
                         "/*",
                         "/login/**",
@@ -46,6 +50,10 @@ public class SecurityConfig {
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .csrf(AbstractHttpConfigurer::disable)
+        .headers(headers -> headers
+            .frameOptions(FrameOptionsConfig::sameOrigin
+            )
+        )
         .build();
   }
 }

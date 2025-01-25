@@ -3,23 +3,20 @@ import {
   HttpInterceptor,
   HttpRequest,
   HttpHandler,
+  HttpInterceptorFn,
 } from '@angular/common/http';
 import { JWTService } from '../services/jwt.service';
 
-@Injectable()
-export class AuthInterceptor implements HttpInterceptor {
-  private jwtService = inject(JWTService);
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const jwtService = inject(JWTService);
+  const token = jwtService.getToken();
 
-  intercept(req: HttpRequest<any>, next: HttpHandler) {
-    const token = this.jwtService.getToken();
-
-    if (token) {
-      const clonedReq = req.clone({
-        setHeaders: { Authorization: `Bearer ${token}` },
-      });
-      return next.handle(clonedReq);
-    }
-
-    return next.handle(req);
+  if (token) {
+    const clonedReq = req.clone({
+      setHeaders: { Authorization: `Bearer ${token}` },
+    });
+    return next(clonedReq);
   }
-}
+
+  return next(req);
+};

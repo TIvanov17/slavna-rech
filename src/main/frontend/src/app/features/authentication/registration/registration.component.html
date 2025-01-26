@@ -1,50 +1,9 @@
-<div class="login-container">
-  <h3 class="login-title">Create an account</h3>
-
-  <div class="login-errors" role="alert" *ngIf="errorMessages.length">
-    <p *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</p>
-  </div>
-
-  <div class="mb-3">
-    <label for="username" class="form-label">Username</label>
-    <input
-      [(ngModel)]="registrationRequest.username"
-      type="text"
-      class="form-control"
-      id="username"
-      placeholder="Enter username"
-    />
-  </div>
-  <div class="mb-3">
-    <label for="email" class="form-label">Email</label>
-    <input
-      [(ngModel)]="registrationRequest.email"
-      type="email"
-      class="form-control"
-      id="email"
-      placeholder="Enter email"
-    />
-  </div>
-  <div class="mb-3">
-    <label for="password" class="form-label">Password</label>
-    <input
-      [(ngModel)]="registrationRequest.password"
-      type="password"
-      class="form-control"
-      id="password"
-      placeholder="Enter password"
-    />
-  </div>
-
-  <div class="">
-    <button (click)="register()" type="button" class="btn btn-primary">
-      <em class="">Register</em>
-    </button>
-    <div class="">
-      Already have an account?
-      <button (click)="login()" type="button" class="btn btn-primary">
-        <em class="">Login</em>
-      </button>
-    </div>
-  </div>
-</div>
+<auth-form
+  [formHeader]="'Create an account'"
+  [authRequest]="authRequest"
+  [errorMessages]="errorMessages"
+  (formSubmit)="register()"
+  [formRedirectMessage]="'Already have an account'"
+  [formRedirectLinkLabel]="'Login'"
+  (onRedirect)="onLoginRedirect()"
+></auth-form>

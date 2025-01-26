@@ -1,8 +1,8 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { UserRequest, UserResponse } from '../models/user.models';
 import { Observable } from 'rxjs';
-import { Page } from '../models/page.modes';
+import { Page, PageFilter } from '../models/page.modes';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +15,21 @@ export class UserService {
     return this.httpClient.post(this.baseUrl, userRequest);
   }
 
-  public getAllUsers(): Observable<Page<UserResponse>> {
-    return this.httpClient.get<Page<UserResponse>>(this.baseUrl);
+  public getAllUsers(params: HttpParams): Observable<Page<UserResponse>> {
+    return this.httpClient.get<Page<UserResponse>>(this.baseUrl, {
+      params,
+    });
+  }
+
+  public getFriendsOfUser(
+    userId: number,
+    params: HttpParams
+  ): Observable<Page<UserResponse>> {
+    return this.httpClient.get<Page<UserResponse>>(
+      `${this.baseUrl}/${userId}/connections/friends`,
+      {
+        params,
+      }
+    );
   }
 }

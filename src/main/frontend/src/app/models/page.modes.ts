@@ -1,3 +1,16 @@
+import {
+  SortColumn,
+  SortDirection,
+} from '../components/table/sortable.directive';
+
+export type PageFilter = {
+  page: number;
+  pageSize: number;
+  searchKeyword: string;
+  sortColumn: string;
+  sortDirection: SortDirection;
+};
+
 export type Page<T> = {
   content: T[];
   pageable: {

@@ -41,7 +41,7 @@ public class JwtHelper {
   public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
     return JWT.create()
         .withSubject(userDetails.getUsername())
-        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 50 * 24))
+        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 50 * 24 * 24))
         .withIssuedAt(new Date(System.currentTimeMillis()))
         .sign(getAlgorithmKey());
   }
@@ -49,7 +49,7 @@ public class JwtHelper {
   public String generateRefreshToken(Map<String, Object> extraClaims, UserDetails userDetails) {
     return JWT.create()
         .withSubject(userDetails.getUsername())
-        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+        .withExpiresAt(new Date(System.currentTimeMillis() + 1000 * 60 * 24 * 24))
         .withIssuedAt(new Date(System.currentTimeMillis()))
         .sign(getAlgorithmKey());
   }

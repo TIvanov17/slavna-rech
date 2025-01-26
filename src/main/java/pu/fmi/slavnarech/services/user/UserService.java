@@ -11,7 +11,7 @@ import pu.fmi.slavnarech.utils.PageFilter;
 
 public interface UserService extends UserDetailsService {
 
-  Page<UserResponse> searchAllByUsername(String username, PageFilter pageFilter);
+  Page<UserResponse> searchAllByUsername(PageFilter pageFilter);
 
   UserResponse saveUser(UserRequest userRequest);
 
@@ -23,5 +23,5 @@ public interface UserService extends UserDetailsService {
 
   boolean changeStatusOfFriendRequest(Long id, Long connectionId, MemberStatus status);
 
-  List<UserResponse> getFriendsOfUser(Long id);
+  Page<UserResponse> getFriendsOfUser(Long id, PageFilter pageFilter);
 }

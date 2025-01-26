@@ -4,19 +4,23 @@ import { FormsModule } from '@angular/forms';
 import { AuthenticationRequest } from '../../../models/authentication.models';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { GlobalStateService } from '../../../services/global-state.service';
+import { AuthFormComponent } from '../common/auth-form.component';
 
 @Component({
   standalone: true,
   selector: 'login',
   templateUrl: './login.component.html',
-  imports: [FormsModule, CommonModule],
+  styleUrls: ['./login.component.css'],
+  imports: [AuthFormComponent, FormsModule, CommonModule],
 })
 export class LoginPage {
   authRequest: AuthenticationRequest = { username: '', password: '' };
-  errorMessages: String[] = [];
+  errorMessages: string[] = [];
 
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
+  private globalStateService = inject(GlobalStateService);
 
   public login() {
     this.errorMessages = [];
@@ -26,7 +30,7 @@ export class LoginPage {
           console.log('User not found!');
           return;
         }
-        localStorage.setItem('auth_token', response.token);
+        this.globalStateService.userDetails = response;
         this.router.navigate(['channels']);
       },
       error: (err) => {
@@ -35,7 +39,7 @@ export class LoginPage {
     });
   }
 
-  public register() {
+  public onRegisterRedirect() {
     this.router.navigate(['register']);
   }
 }

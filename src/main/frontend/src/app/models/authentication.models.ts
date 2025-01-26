@@ -3,6 +3,7 @@ import { UserResponse } from './user.models';
 export type AuthenticationRequest = {
   username: string;
   password: string;
+  email?: string;
 };
 
 export type RegistrationRequest = {
@@ -14,5 +15,5 @@ export type RegistrationRequest = {
 export type UserDetails = {
   token: string;
   refreshToken: string;
-  user: UserResponse;
+  currentUser: UserResponse;
 };

@@ -1,15 +1,19 @@
 package pu.fmi.slavnarech.utils;
 
+import lombok.Data;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+@Data
 public class PageFilter implements Pageable {
 
-  private static final int DEFAULT_PAGE_SIZE = 10;
+  public static final int DEFAULT_PAGE_SIZE = 10;
+
+  private String searchKeyword;
 
   private int page;
 
-  protected int pageSize = DEFAULT_PAGE_SIZE;
+  protected int pageSize;
 
   @Override
   public int getPageNumber() {
@@ -23,7 +27,8 @@ public class PageFilter implements Pageable {
 
   @Override
   public long getOffset() {
-    return 0;
+    long page = this.page - 1;
+    return (page < 0 ? 0 : page) * this.pageSize;
   }
 
   @Override

@@ -31,10 +31,18 @@ public class UserServiceImpl implements UserService {
   @Autowired private UserMapper userMapper;
 
   @Override
-  public Page<UserResponse> searchAllByUsername(String username, PageFilter pageFilter) {
+  public Page<UserResponse> searchAllByUsername(PageFilter pageFilter) {
+
+    if(pageFilter == null){
+      pageFilter = new PageFilter();
+    }
+
+    if(pageFilter.getPageSize() == 0){
+      pageFilter.setPageSize(PageFilter.DEFAULT_PAGE_SIZE);
+    }
 
     Page<User> page =
-        userRepository.findAll(UserSpecification.searchByUsernameOrEmail(username), pageFilter);
+        userRepository.findAll(UserSpecification.searchByUsernameOrEmail(pageFilter.getSearchKeyword()), pageFilter);
 
     return page.map(user -> userMapper.mapToResponseDTO(user));
   }
@@ -79,10 +87,17 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public List<UserResponse> getFriendsOfUser(Long id) {
-    return userRepository.findAll(UserSpecification.hasFriends(id)).stream()
-        .map(user -> userMapper.mapToResponseDTO(user))
-        .toList();
+  public Page<UserResponse> getFriendsOfUser(Long id, PageFilter pageFilter) {
+    if(pageFilter == null){
+      pageFilter = new PageFilter();
+    }
+
+    if(pageFilter.getPageSize() == 0){
+      pageFilter.setPageSize(PageFilter.DEFAULT_PAGE_SIZE);
+    }
+
+    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id), pageFilter);
+    return page.map(user -> userMapper.mapToResponseDTO(user));
   }
 
   @Override

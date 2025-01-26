@@ -5,6 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
 import { UserResponse } from '../../../models/user.models';
 import { Tabs } from '../../../components/tabs/tab.component';
+import { AuthenticationService } from '../../../services/authentication.service';
+import { GlobalStateService } from '../../../services/global-state.service';
+import { MessageRequest } from '../../../models/message.model';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   standalone: true,
@@ -22,12 +26,15 @@ export class ChannelPage implements OnInit, OnDestroy {
   private subscription: Subscription | undefined;
   private webSocketService = inject(WebSocketService);
   private userService = inject(UserService);
+  private globalStateService = inject(GlobalStateService);
 
   ngOnInit() {
     this.subscription = this.webSocketService.getMessages().subscribe((msg) => {
       this.messages.push(msg);
     });
-    this.userService.getAllUsers().subscribe((data) => {
+    const params = new HttpParams();
+
+    this.userService.getAllUsers(params).subscribe((data) => {
       console.log(data.content);
       this.users = data.content;
     });
@@ -42,6 +49,22 @@ export class ChannelPage implements OnInit, OnDestroy {
     this.message = '';
   }
 
+  sendPrivateMessage() {
+    this.webSocketService.sendMessage(`/app/private-message/2`, this.message);
+    this.message = '';
+  }
+
+  sendMessageWithPayload() {
+    const payload: MessageRequest = {
+      senderId: this.globalStateService.userDetails?.currentUser.id || 1,
+      receiverId: 2,
+      content: this.message,
+    };
+    this.webSocketService.sendMessageWithPayload(
+      `/app/private-message`,
+      payload
+    );
+  }
   ngOnDestroy() {
     if (this.subscription) {
       this.subscription.unsubscribe();

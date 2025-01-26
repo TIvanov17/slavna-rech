@@ -4,6 +4,7 @@ import { LoginPage } from './features/authentication/login/login.component';
 import { RegisterPage } from './features/authentication/registration/registration.component';
 import { AuthGuard } from './http/auth.guard';
 import { GuestGuard } from './http/non-auth.guard';
+import { UserTableComponent } from './features/user/user-table/user-table.component';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,11 @@ export const routes: Routes = [
   {
     path: 'channels',
     component: ChannelPage,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'users',
+    component: UserTableComponent,
     canActivate: [AuthGuard],
   },
 ];

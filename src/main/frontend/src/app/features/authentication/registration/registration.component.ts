@@ -1,35 +1,36 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import {
-  AuthenticationRequest,
-  RegistrationRequest,
-} from '../../../models/authentication.models';
+import { AuthenticationRequest } from '../../../models/authentication.models';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../../../services/authentication.service';
+import { GlobalStateService } from '../../../services/global-state.service';
+import { AuthFormComponent } from '../common/auth-form.component';
 
 @Component({
   standalone: true,
   selector: 'login',
   templateUrl: './registration.component.html',
-  imports: [FormsModule, CommonModule],
+  styleUrls: ['./registration.component.css'],
+  imports: [AuthFormComponent, FormsModule, CommonModule],
 })
 export class RegisterPage {
-  registrationRequest: RegistrationRequest = {
+  authRequest: AuthenticationRequest = {
     username: '',
-    email: '',
     password: '',
+    email: '',
   };
-  errorMessages: String[] = [];
+  errorMessages: string[] = [];
 
   private router = inject(Router);
   private authenticationService = inject(AuthenticationService);
+  private globalStateService = inject(GlobalStateService);
 
   public register() {
     this.errorMessages = [];
-    this.authenticationService.register(this.registrationRequest).subscribe({
+    this.authenticationService.register(this.authRequest).subscribe({
       next: (response) => {
-        localStorage.setItem('auth_token', response.token);
+        this.globalStateService.userDetails = response;
         this.router.navigate(['channels']);
       },
       error: (err) => {
@@ -38,7 +39,7 @@ export class RegisterPage {
     });
   }
 
-  public login() {
+  public onLoginRedirect() {
     this.router.navigate(['login']);
   }
 }

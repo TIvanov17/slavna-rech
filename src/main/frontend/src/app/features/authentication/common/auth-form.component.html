@@ -1,0 +1,87 @@
+<div class="auth-container">
+  <div class="auth-header">
+    <h4>{{ formHeader }}</h4>
+  </div>
+
+  <form (ngSubmit)="submitForm()" #loginForm="ngForm">
+    <div *ngIf="authRequest.email !== undefined" class="auth-field">
+      <label for="email" class="form-label">Email</label>
+      <input
+        [(ngModel)]="authRequest.email"
+        #email="ngModel"
+        type="email"
+        class="form-control"
+        id="email"
+        name="email"
+        placeholder="Enter email"
+        required
+      />
+      <div
+        *ngIf="email?.invalid && (email?.dirty || email?.touched)"
+        class="error-message"
+      >
+        <small *ngIf="email?.errors?.['required']">Email is required.</small>
+        <small *ngIf="email?.errors?.['email']"
+          >Please enter a valid email.</small
+        >
+      </div>
+    </div>
+
+    <div class="auth-field">
+      <label for="username" class="form-label">Username</label>
+      <input
+        [(ngModel)]="authRequest.username"
+        #username="ngModel"
+        type="text"
+        class="form-control"
+        id="username"
+        name="username"
+        placeholder="Enter username"
+        required
+      />
+      <div
+        *ngIf="username?.invalid && (username?.dirty || username?.touched)"
+        class="error-message"
+      >
+        <small *ngIf="username?.errors?.['required']"
+          >Username is required.</small
+        >
+      </div>
+    </div>
+    <div class="auth-field">
+      <label for="password" class="form-label">Password</label>
+      <input
+        [(ngModel)]="authRequest.password"
+        #password="ngModel"
+        type="password"
+        class="form-control"
+        id="password"
+        name="password"
+        placeholder="Enter password"
+        required
+      />
+      <div
+        *ngIf="password?.invalid && (password?.dirty || password?.touched)"
+        class="error-message"
+      >
+        <small *ngIf="password?.errors?.['required']"
+          >Password is required.</small
+        >
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="btn btn-primary"
+      [disabled]="loginForm.invalid"
+    >
+      {{ formHeader }}
+    </button>
+    <div class="register-link">
+      <p>
+        {{ formRedirectMessage }}
+        <a (click)="onRedirectClicked()">{{ formRedirectLinkLabel }}</a>
+      </p>
+    </div>
+  </form>
+</div>

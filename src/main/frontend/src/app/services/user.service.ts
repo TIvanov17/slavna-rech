@@ -1,8 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { UserRequest, UserResponse } from '../models/user.models';
+import {
+  UserConnectionResponse,
+  UserRequest,
+  UserResponse,
+} from '../models/user.models';
 import { Observable } from 'rxjs';
 import { Page, PageFilter } from '../models/page.modes';
+import { MemberStatus } from '../enums/member-status.enum';
 
 @Injectable({
   providedIn: 'root',
@@ -15,8 +20,10 @@ export class UserService {
     return this.httpClient.post(this.baseUrl, userRequest);
   }
 
-  public getAllUsers(params: HttpParams): Observable<Page<UserResponse>> {
-    return this.httpClient.get<Page<UserResponse>>(this.baseUrl, {
+  public getAllUsers(
+    params: HttpParams
+  ): Observable<Page<UserConnectionResponse>> {
+    return this.httpClient.get<Page<UserConnectionResponse>>(this.baseUrl, {
       params,
     });
   }
@@ -24,8 +31,8 @@ export class UserService {
   public getFriendsOfUser(
     userId: number,
     params: HttpParams
-  ): Observable<Page<UserResponse>> {
-    return this.httpClient.get<Page<UserResponse>>(
+  ): Observable<Page<UserConnectionResponse>> {
+    return this.httpClient.get<Page<UserConnectionResponse>>(
       `${this.baseUrl}/${userId}/connections/friends`,
       {
         params,
@@ -36,8 +43,8 @@ export class UserService {
   public getFriendRequestsSendFromUser(
     userId: number,
     params: HttpParams
-  ): Observable<Page<UserResponse>> {
-    return this.httpClient.get<Page<UserResponse>>(
+  ): Observable<Page<UserConnectionResponse>> {
+    return this.httpClient.get<Page<UserConnectionResponse>>(
       `${this.baseUrl}/${userId}/connections/friend-requests`,
       {
         params,
@@ -48,12 +55,23 @@ export class UserService {
   public getFriendInvitesReceivedForUser(
     userId: number,
     params: HttpParams
-  ): Observable<Page<UserResponse>> {
-    return this.httpClient.get<Page<UserResponse>>(
+  ): Observable<Page<UserConnectionResponse>> {
+    return this.httpClient.get<Page<UserConnectionResponse>>(
       `${this.baseUrl}/${userId}/connections/friend-invites`,
       {
         params,
       }
+    );
+  }
+
+  public changeStatusOfMemberFriend(
+    userId: number,
+    connectionId: number,
+    memberStatus: MemberStatus
+  ) {
+    return this.httpClient.put(
+      `${this.baseUrl}/${userId}/connection/${connectionId}/member/${memberStatus}`,
+      null
     );
   }
 }

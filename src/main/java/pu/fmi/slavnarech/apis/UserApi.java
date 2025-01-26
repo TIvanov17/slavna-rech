@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pu.fmi.slavnarech.annotations.ValidRestApi;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
+import pu.fmi.slavnarech.entities.user.dtos.UserConnectionResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserRequest;
 import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
 import pu.fmi.slavnarech.services.user.UserService;
@@ -38,17 +39,20 @@ public class UserApi {
   }
 
   @GetMapping("/{id}/connections/friends")
-    public ResponseEntity<Page<UserResponse>> listFriendsOfUser(@PathVariable Long id, PageFilter pageFilter) {
+    public ResponseEntity<Page<UserResponse>> listFriendsOfUser(
+        @PathVariable Long id, PageFilter pageFilter) {
     return ResponseEntity.ok(userService.getFriendsOfUser(id, pageFilter));
   }
 
   @GetMapping("/{id}/connections/friend-requests")
-  public ResponseEntity<Page<UserResponse>> getFriendRequestsSendFromUser(@PathVariable Long id, PageFilter pageFilter) {
+  public ResponseEntity<Page<UserResponse>> getFriendRequestsSendFromUser(
+      @PathVariable Long id, PageFilter pageFilter) {
     return ResponseEntity.ok(userService.getFriendRequestsSendFromUser(id, pageFilter));
   }
 
   @GetMapping("/{id}/connections/friend-invites")
-  public ResponseEntity<Page<UserResponse>> getFriendInvitesReceivedForUser(@PathVariable Long id, PageFilter pageFilter) {
+  public ResponseEntity<Page<UserConnectionResponse>> getFriendInvitesReceivedForUser(
+      @PathVariable Long id, PageFilter pageFilter) {
     return ResponseEntity.ok(userService.getFriendInvitesReceivedForUser(id, pageFilter));
   }
 }

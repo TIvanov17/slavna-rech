@@ -3,3 +3,18 @@
   font-size: 20px;
   transition: color 0.3s;
 }
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  margin: 5rem auto;
+}
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+.nav-item {
+  flex-grow: 1;
+  text-align: center;
+}

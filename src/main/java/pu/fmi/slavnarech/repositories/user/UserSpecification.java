@@ -1,6 +1,7 @@
 package pu.fmi.slavnarech.repositories.user;
 
 import jakarta.persistence.criteria.Join;
+import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
@@ -25,7 +26,37 @@ public class UserSpecification {
     });
   }
 
-  public static Specification<User> hasFriends(Long id, MemberStatus memberStatus) {
+  public static Specification<User> hasFriends(Long id) {
+
+    return ((root, query, criteriaBuilder) -> {
+      query.distinct(true);
+
+      Join<User, Member> memberJoin = root.join(User_.members);
+      Join<Member, Connection> connectionJoin = memberJoin.join(Member_.connection);
+
+      Subquery<Long> subquery = query.subquery(Long.class);
+      Root<Member> memberSubquery = subquery.from(Member.class);
+      Join<Member, Connection> connectionSubquery = memberSubquery.join(Member_.connection);
+      Join<Member, User> userSubquery = memberSubquery.join(Member_.user);
+
+      subquery.select(userSubquery.get(User_.id));
+      subquery.where(
+          criteriaBuilder.equal(connectionJoin.get(Connection_.id),
+              connectionSubquery.get(Connection_.id)),
+          criteriaBuilder.notEqual(memberSubquery.get(Member_.user).get(User_.id),
+              root.get(User_.id)),
+          criteriaBuilder.equal(memberSubquery.get(Member_.status), MemberStatus.ACCEPTED)
+      );
+
+      return criteriaBuilder.and(
+          criteriaBuilder.exists(subquery),
+          criteriaBuilder.equal(memberJoin.get(Member_.status), MemberStatus.ACCEPTED),
+          criteriaBuilder.notEqual(root.get(User_.id), id)
+      );
+    });
+  }
+
+  public static Specification<User> hasFriendsRequest(Long id){
 
     return ((root, query, criteriaBuilder) -> {
       query.distinct(true);
@@ -40,7 +71,7 @@ public class UserSpecification {
 
       subquery.select(memberUser.get(User_.id));
       subquery.where(
-          criteriaBuilder.equal(memberSubquery.get(Member_.status), memberStatus),
+          criteriaBuilder.equal(memberSubquery.get(Member_.status), MemberStatus.INVITED),
           criteriaBuilder.equal(
               connectionSubquery.get(Connection_.id), connection.get(Connection_.id)),
           criteriaBuilder.notEqual(memberUser.get(User_.id), id),
@@ -49,34 +80,7 @@ public class UserSpecification {
       return criteriaBuilder.and(
           criteriaBuilder.in(root.get(User_.id)).value(subquery),
           criteriaBuilder.notEqual(root.get(User_.id), id));
+
     });
   }
-
-  public static Specification<User> hasFriendInvites(Long id) {
-
-    return ((root, query, criteriaBuilder) -> {
-      query.distinct(true);
-
-      Join<User, Member> member = root.join(User_.members);
-      Join<Member, Connection> connection = member.join(Member_.connection);
-
-      Subquery<Long> subquery = query.subquery(Long.class);
-      Root<Member> memberSubquery = subquery.from(Member.class);
-      Join<Member, Connection> connectionSubquery = memberSubquery.join(Member_.connection);
-      Join<Member, User> memberUser = memberSubquery.join(Member_.user);
-
-      subquery.select(memberUser.get(User_.id));
-      subquery.where(
-          criteriaBuilder.equal(memberSubquery.get(Member_.status), MemberStatus.ACCEPTED),
-          criteriaBuilder.equal(
-              connectionSubquery.get(Connection_.id), connection.get(Connection_.id)),
-          criteriaBuilder.notEqual(memberUser.get(User_.id), id),
-          criteriaBuilder.isTrue(connectionSubquery.get(Connection_.isActive)));
-
-      return criteriaBuilder.and(
-          criteriaBuilder.in(root.get(User_.id)).value(subquery),
-          criteriaBuilder.notEqual(root.get(User_.id), id));
-    });
-  }
-
 }

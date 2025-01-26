@@ -48,7 +48,12 @@
             @if(currentUser?.id !== user.id){
             <ng-container *ngFor="let icon of icons">
               <button
-                (click)="icon.iconClick.emit(user.id)"
+                (click)="
+                  icon.iconClick.emit({
+                    userId: user.id,
+                    connectionId: user.connectionId
+                  })
+                "
                 class="btn btn-link"
               >
                 <i [class]="icon.iconClass" [title]="icon.title"></i>

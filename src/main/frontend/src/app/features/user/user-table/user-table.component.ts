@@ -17,7 +17,10 @@ import {
   SortEvent,
 } from '../../../components/table/sortable.directive';
 import { PageFilter } from '../../../models/page.modes';
-import { UserResponse } from '../../../models/user.models';
+import {
+  UserConnectionResponse,
+  UserResponse,
+} from '../../../models/user.models';
 import { GlobalStateService } from '../../../services/global-state.service';
 import { IconComponent } from '../../../components/icon/icon.component';
 import { CommonModule } from '@angular/common';
@@ -46,16 +49,15 @@ export class UserTable implements OnInit, OnDestroy {
     sortDirection: 'asc',
   };
 
-  @Input() users$: UserResponse[] = [];
+  @Input() users$: UserConnectionResponse[] = [];
   @Input() total$: number = 0;
-  @Input() friends$: UserResponse[] = [];
+  @Input() friends$: UserConnectionResponse[] = [];
   @Input() totalFriends$: number = 0;
   private searchTimeout: any;
 
   currentUser = this.globalStateService.userDetails?.currentUser;
 
   @Input() fetchUsers!: (criteria: PageFilter) => void;
-  @Input() onAddFriend!: (userId: number) => void;
   @Output() actionEvent = new EventEmitter<number>();
   @Output() actionRemoveEvent = new EventEmitter<number>();
   @ContentChild(IconComponent) addFriendIcon?: IconComponent;
@@ -63,11 +65,8 @@ export class UserTable implements OnInit, OnDestroy {
     new QueryList<any>();
 
   ngAfterContentInit() {
-    // You can access all projected icons in the icons QueryList
     this.icons.toArray().forEach((icon) => {
-      // Example: Listen for click events on each icon
       icon.iconClick.subscribe(() => {
-        // You can handle the icon click events here
         console.log('Icon clicked!');
       });
     });
@@ -94,13 +93,13 @@ export class UserTable implements OnInit, OnDestroy {
 
   onSort(column: SortEvent): void {}
 
-  addAction(userId: number): void {
-    this.actionEvent.emit(userId);
-  }
+  // addAction(userId: number): void {
+  //   this.actionEvent.emit(userId);
+  // }
 
-  removeAction(userId: number): void {
-    this.actionRemoveEvent.emit(userId);
-  }
+  // removeAction(userId: number): void {
+  //   this.actionRemoveEvent.emit(userId);
+  // }
 
   ngOnDestroy(): void {
     if (this.searchTimeout) {

@@ -1,4 +1,4 @@
-<div>
+<div class="container">
   <ul class="nav nav-tabs">
     <li class="nav-item">
       <a
@@ -50,7 +50,7 @@
         [iconClass]="'fa-solid fa-user-plus'"
         [title]="'Add Friend'"
         class="app-icon"
-        (iconClick)="addFriend($event)"
+        (iconClick)="addFriend($event.userId, $event.connectionId)"
       >
         ></app-icon
       ></user-table
@@ -67,8 +67,7 @@
         #addFriendIconComponent
         [iconClass]="'a-sharp fa-solid fa-xmark'"
         [title]="'Remove Friend'"
-        class="app-icon"
-        (iconClick)="removeFriend($event)"
+        (iconClick)="removeFriend($event.userId, $event.connectionId)"
       ></app-icon
     ></user-table>
   </div>
@@ -83,8 +82,9 @@
         #addFriendIconComponent
         [iconClass]="'a-sharp fa-solid fa-xmark'"
         [title]="'Cancel Friend Request'"
-        class="app-icon"
-        (iconClick)="changeStatusOfFriendRequest($event)"
+        (iconClick)="
+          changeStatusOfFriendRequest($event.userId, $event.connectionId)
+        "
       ></app-icon
     ></user-table>
   </div>
@@ -92,16 +92,17 @@
   <div [hidden]="activeTab !== 'invites'">
     <user-table
       [userSearchCriteria]="searchCriteria"
-      [users$]="requests$"
-      [total$]="totalRequests$"
+      [users$]="invites$"
+      [total$]="totalInvites$"
       [fetchUsers]="fetchFriendInvitesReceivedForUser"
     >
       <app-icon
         #addFriendIconComponent
         [iconClass]="'fa-sharp fa-solid fa-check'"
         [title]="'Accept Friend Request'"
-        class="app-icon"
-        (iconClick)="changeStatusOfFriendRequest($event)"
+        (iconClick)="
+          changeStatusOfFriendRequest($event.userId, $event.connectionId)
+        "
       >
         ></app-icon
       >
@@ -109,8 +110,9 @@
         #addFriendIconComponent
         [iconClass]="'a-sharp fa-solid fa-xmark'"
         [title]="'Cancel Friend Request'"
-        class="app-icon"
-        (iconClick)="changeStatusOfFriendRequest($event)"
+        (iconClick)="
+          changeStatusOfFriendRequest($event.userId, $event.connectionId)
+        "
       >
         ></app-icon
       >

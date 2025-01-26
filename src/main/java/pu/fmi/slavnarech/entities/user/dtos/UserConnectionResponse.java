@@ -10,7 +10,11 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserResponse {
+public class UserConnectionResponse {
+
+  private Long connectionId;
+
+  private LocalDate connectionCreatedOn;
 
   private Long id;
 

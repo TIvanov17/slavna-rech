@@ -9,5 +9,8 @@ export class IconComponent {
   @Input() iconClass: string = '';
   @Input() title: string = '';
 
-  @Output() iconClick = new EventEmitter<number>();
+  @Output() iconClick = new EventEmitter<{
+    userId: number;
+    connectionId: number;
+  }>();
 }

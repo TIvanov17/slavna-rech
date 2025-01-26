@@ -1,7 +1,10 @@
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserTable } from '../user-table/user-table.component';
-import { UserResponse } from '../../../models/user.models';
+import {
+  UserConnectionResponse,
+  UserResponse,
+} from '../../../models/user.models';
 import { HttpParams } from '@angular/common/http';
 import { PageFilter } from '../../../models/page.modes';
 import { UserService } from '../../../services/user.service';
@@ -9,6 +12,7 @@ import { GlobalStateService } from '../../../services/global-state.service';
 import { ConnectionService } from '../../../services/connection.service';
 import { IconComponent } from '../../../components/icon/icon.component';
 import { CommonModule } from '@angular/common';
+import { MemberStatus } from '../../../enums/member-status.enum';
 
 @Component({
   standalone: true,
@@ -20,16 +24,16 @@ import { CommonModule } from '@angular/common';
 export class UserTabs {
   activeTab = 'users';
 
-  users$: UserResponse[] = [];
+  users$: UserConnectionResponse[] = [];
   total$: number = 0;
 
-  friends$: UserResponse[] = [];
+  friends$: UserConnectionResponse[] = [];
   totalFriends$ = 0;
 
-  requests$: UserResponse[] = [];
+  requests$: UserConnectionResponse[] = [];
   totalRequests$ = 0;
 
-  invites$: UserResponse[] = [];
+  invites$: UserConnectionResponse[] = [];
   totalInvites$ = 0;
 
   searchCriteria: PageFilter = {
@@ -82,8 +86,8 @@ export class UserTabs {
       this.userService
         .getFriendInvitesReceivedForUser(senderId, params)
         .subscribe((data) => {
-          this.requests$ = data.content;
-          this.totalFriends$ = data.totalElements;
+          this.invites$ = data.content;
+          this.totalInvites$ = data.totalElements;
         });
     }
   };
@@ -97,7 +101,7 @@ export class UserTabs {
       .set('sortDirection', criteria.sortDirection);
   }
 
-  addFriend = (userId: number): void => {
+  addFriend = (userId: number, connectionId?: number): void => {
     console.log(userId);
     const senderId = this.globalStateService.userDetails?.currentUser.id;
     if (senderId) {
@@ -112,7 +116,7 @@ export class UserTabs {
     }
   };
 
-  removeFriend = (userId: number): void => {
+  removeFriend = (userId: number, connectionId?: number): void => {
     console.log(userId);
     const senderId = this.globalStateService.userDetails?.currentUser.id;
     if (senderId) {
@@ -127,18 +131,20 @@ export class UserTabs {
     }
   };
 
-  changeStatusOfFriendRequest = (userId: number): void => {
+  changeStatusOfFriendRequest = (
+    userId: number,
+    connectionId: number
+  ): void => {
     console.log(userId);
     const senderId = this.globalStateService.userDetails?.currentUser.id;
     if (senderId) {
-      this.connectionService
-        .sendFriendRequest({
-          senderId: senderId,
-          receiverId: userId,
-        })
-        .subscribe((data) => {
-          console.log('Friend request sent successfully');
-        });
+      this.userService
+        .changeStatusOfMemberFriend(
+          senderId,
+          connectionId,
+          MemberStatus.ACCEPTED
+        )
+        .subscribe((data) => {});
     }
   };
 

@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.user.User;
+import pu.fmi.slavnarech.entities.user.dtos.UserConnectionResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserRequest;
 import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
 import pu.fmi.slavnarech.utils.PageFilter;
@@ -27,5 +28,5 @@ public interface UserService extends UserDetailsService {
 
   Page<UserResponse> getFriendRequestsSendFromUser(Long id, PageFilter pageFilter);
 
-  Page<UserResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter);
+  Page<UserConnectionResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter);
 }

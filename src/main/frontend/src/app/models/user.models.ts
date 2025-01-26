@@ -10,3 +10,8 @@ export type UserResponse = {
   createdOn: Date;
   isActive: boolean;
 };
+
+export type UserConnectionResponse = {
+  connectionId: number;
+  connectionCreatedOn: Date;
+} & UserResponse;

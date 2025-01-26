@@ -10,6 +10,7 @@ import pu.fmi.slavnarech.entities.connection.Connection;
 import pu.fmi.slavnarech.entities.member.Member;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.user.User;
+import pu.fmi.slavnarech.entities.user.dtos.UserConnectionResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserRequest;
 import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
 import pu.fmi.slavnarech.exceptions.NotFoundException;
@@ -88,7 +89,7 @@ public class UserServiceImpl implements UserService {
       pageFilter = new PageFilter();
     }
 
-    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id, MemberStatus.ACCEPTED), pageFilter);
+    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id), pageFilter);
     return page.map(user -> userMapper.mapToResponseDTO(user));
   }
 
@@ -98,18 +99,17 @@ public class UserServiceImpl implements UserService {
       pageFilter = new PageFilter();
     }
 
-    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id, MemberStatus.INVITED), pageFilter);
+    Page<User> page = userRepository.findAll(UserSpecification.hasFriendsRequest(id), pageFilter);
     return page.map(user -> userMapper.mapToResponseDTO(user));
   }
 
   @Override
-  public Page<UserResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter) {
+  public Page<UserConnectionResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter) {
     if(pageFilter == null){
       pageFilter = new PageFilter();
     }
 
-    Page<User> page = userRepository.findAll(UserSpecification.hasFriendInvites(id), pageFilter);
-    return page.map(user -> userMapper.mapToResponseDTO(user));
+    return userRepository.getFriendInvitesFor(id, pageFilter);
   }
 
   @Override

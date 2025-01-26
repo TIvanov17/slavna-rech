@@ -41,4 +41,14 @@ public class UserApi {
     public ResponseEntity<Page<UserResponse>> listFriendsOfUser(@PathVariable Long id, PageFilter pageFilter) {
     return ResponseEntity.ok(userService.getFriendsOfUser(id, pageFilter));
   }
+
+  @GetMapping("/{id}/connections/friend-requests")
+  public ResponseEntity<Page<UserResponse>> getFriendRequestsSendFromUser(@PathVariable Long id, PageFilter pageFilter) {
+    return ResponseEntity.ok(userService.getFriendRequestsSendFromUser(id, pageFilter));
+  }
+
+  @GetMapping("/{id}/connections/friend-invites")
+  public ResponseEntity<Page<UserResponse>> getFriendInvitesReceivedForUser(@PathVariable Long id, PageFilter pageFilter) {
+    return ResponseEntity.ok(userService.getFriendInvitesReceivedForUser(id, pageFilter));
+  }
 }

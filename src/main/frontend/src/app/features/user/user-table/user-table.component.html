@@ -45,9 +45,16 @@
             />
           </td>
           <td>
-            <button (click)="addFriend(user.id)" class="btn btn-link">
-              <i class="fa-solid fa-user-plus" title="Add Friend"></i>
-            </button>
+            @if(currentUser?.id !== user.id){
+            <ng-container *ngFor="let icon of icons">
+              <button
+                (click)="icon.iconClick.emit(user.id)"
+                class="btn btn-link"
+              >
+                <i [class]="icon.iconClass" [title]="icon.title"></i>
+              </button>
+            </ng-container>
+            }
           </td>
         </tr>
         } @empty {
@@ -61,70 +68,6 @@
     <div class="d-flex justify-content-between p-2">
       <ngb-pagination
         [collectionSize]="total$"
-        [(page)]="userSearchCriteria.page"
-        [pageSize]="userSearchCriteria.pageSize"
-        (pageChange)="onPageChange()"
-      >
-      </ngb-pagination>
-    </div>
-  </form>
-  <form>
-    <div class="mb-3 row">
-      <label
-        for="table-complete-search"
-        class="col-xs-3 col-sm-auto col-form-label"
-        >Search by username:</label
-      >
-      <div class="col-xs-3 col-sm-auto">
-        <input
-          id="table-complete-search"
-          type="text"
-          class="form-control"
-          name="searchTerm"
-          [(ngModel)]="userSearchCriteria.searchKeyword"
-          (ngModelChange)="onSearchChange()"
-        />
-      </div>
-    </div>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col" sortable="username" (sort)="onSort($event)">
-            Username
-          </th>
-          <th scope="col" sortable="email" (sort)="onSort($event)">Email</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (user of friends$; track user.id) {
-        <tr>
-          <th scope="row">{{ user.id }}</th>
-          <td>
-            <ngb-highlight
-              [result]="user.username"
-              [term]="userSearchCriteria.searchKeyword"
-            />
-          </td>
-          <td>
-            <ngb-highlight
-              [result]="user.email"
-              [term]="userSearchCriteria.searchKeyword"
-            />
-          </td>
-        </tr>
-        } @empty {
-        <tr>
-          <td colspan="4" style="text-align: center">No users found</td>
-        </tr>
-        }
-      </tbody>
-    </table>
-
-    <div class="d-flex justify-content-between p-2">
-      <ngb-pagination
-        [collectionSize]="totalFriends$"
         [(page)]="userSearchCriteria.page"
         [pageSize]="userSearchCriteria.pageSize"
         (pageChange)="onPageChange()"

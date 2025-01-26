@@ -1,0 +1,119 @@
+<div>
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'users'"
+        (click)="onTabChange('users')"
+      >
+        Users
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'friends'"
+        (click)="activeTab = 'friends'"
+        (click)="onTabChange('friends')"
+      >
+        Friends
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'requests'"
+        (click)="onTabChange('requests')"
+      >
+        Friend Requests
+      </a>
+    </li>
+    <li class="nav-item">
+      <a
+        class="nav-link"
+        [class.active]="activeTab === 'invites'"
+        (click)="onTabChange('invites')"
+      >
+        Friend Invites
+      </a>
+    </li>
+  </ul>
+
+  <div [hidden]="activeTab !== 'users'">
+    <user-table
+      [userSearchCriteria]="searchCriteria"
+      [users$]="users$"
+      [total$]="total$"
+      [fetchUsers]="fetchAllUsers"
+      ><app-icon
+        #addFriendIconComponent
+        [iconClass]="'fa-solid fa-user-plus'"
+        [title]="'Add Friend'"
+        class="app-icon"
+        (iconClick)="addFriend($event)"
+      >
+        ></app-icon
+      ></user-table
+    >
+  </div>
+
+  <div [hidden]="activeTab !== 'friends'">
+    <user-table
+      [userSearchCriteria]="searchCriteria"
+      [users$]="friends$"
+      [total$]="totalFriends$"
+      [fetchUsers]="fetchFriends"
+      ><app-icon
+        #addFriendIconComponent
+        [iconClass]="'a-sharp fa-solid fa-xmark'"
+        [title]="'Remove Friend'"
+        class="app-icon"
+        (iconClick)="removeFriend($event)"
+      ></app-icon
+    ></user-table>
+  </div>
+
+  <div [hidden]="activeTab !== 'requests'">
+    <user-table
+      [userSearchCriteria]="searchCriteria"
+      [users$]="requests$"
+      [total$]="totalRequests$"
+      [fetchUsers]="fetchFriendRequestsSendFromUser"
+      ><app-icon
+        #addFriendIconComponent
+        [iconClass]="'a-sharp fa-solid fa-xmark'"
+        [title]="'Cancel Friend Request'"
+        class="app-icon"
+        (iconClick)="changeStatusOfFriendRequest($event)"
+      ></app-icon
+    ></user-table>
+  </div>
+
+  <div [hidden]="activeTab !== 'invites'">
+    <user-table
+      [userSearchCriteria]="searchCriteria"
+      [users$]="requests$"
+      [total$]="totalRequests$"
+      [fetchUsers]="fetchFriendInvitesReceivedForUser"
+    >
+      <app-icon
+        #addFriendIconComponent
+        [iconClass]="'fa-sharp fa-solid fa-check'"
+        [title]="'Accept Friend Request'"
+        class="app-icon"
+        (iconClick)="changeStatusOfFriendRequest($event)"
+      >
+        ></app-icon
+      >
+      <app-icon
+        #addFriendIconComponent
+        [iconClass]="'a-sharp fa-solid fa-xmark'"
+        [title]="'Cancel Friend Request'"
+        class="app-icon"
+        (iconClick)="changeStatusOfFriendRequest($event)"
+      >
+        ></app-icon
+      >
+    </user-table>
+  </div>
+</div>

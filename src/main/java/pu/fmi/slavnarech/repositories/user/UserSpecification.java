@@ -25,7 +25,34 @@ public class UserSpecification {
     });
   }
 
-  public static Specification<User> hasFriends(Long id) {
+  public static Specification<User> hasFriends(Long id, MemberStatus memberStatus) {
+
+    return ((root, query, criteriaBuilder) -> {
+      query.distinct(true);
+
+      Join<User, Member> member = root.join(User_.members);
+      Join<Member, Connection> connection = member.join(Member_.connection);
+
+      Subquery<Long> subquery = query.subquery(Long.class);
+      Root<Member> memberSubquery = subquery.from(Member.class);
+      Join<Member, Connection> connectionSubquery = memberSubquery.join(Member_.connection);
+      Join<Member, User> memberUser = memberSubquery.join(Member_.user);
+
+      subquery.select(memberUser.get(User_.id));
+      subquery.where(
+          criteriaBuilder.equal(memberSubquery.get(Member_.status), memberStatus),
+          criteriaBuilder.equal(
+              connectionSubquery.get(Connection_.id), connection.get(Connection_.id)),
+          criteriaBuilder.notEqual(memberUser.get(User_.id), id),
+          criteriaBuilder.isTrue(connectionSubquery.get(Connection_.isActive)));
+
+      return criteriaBuilder.and(
+          criteriaBuilder.in(root.get(User_.id)).value(subquery),
+          criteriaBuilder.notEqual(root.get(User_.id), id));
+    });
+  }
+
+  public static Specification<User> hasFriendInvites(Long id) {
 
     return ((root, query, criteriaBuilder) -> {
       query.distinct(true);
@@ -51,4 +78,5 @@ public class UserSpecification {
           criteriaBuilder.notEqual(root.get(User_.id), id));
     });
   }
+
 }

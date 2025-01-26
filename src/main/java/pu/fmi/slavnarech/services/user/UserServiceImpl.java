@@ -37,10 +37,6 @@ public class UserServiceImpl implements UserService {
       pageFilter = new PageFilter();
     }
 
-    if(pageFilter.getPageSize() == 0){
-      pageFilter.setPageSize(PageFilter.DEFAULT_PAGE_SIZE);
-    }
-
     Page<User> page =
         userRepository.findAll(UserSpecification.searchByUsernameOrEmail(pageFilter.getSearchKeyword()), pageFilter);
 
@@ -92,11 +88,27 @@ public class UserServiceImpl implements UserService {
       pageFilter = new PageFilter();
     }
 
-    if(pageFilter.getPageSize() == 0){
-      pageFilter.setPageSize(PageFilter.DEFAULT_PAGE_SIZE);
+    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id, MemberStatus.ACCEPTED), pageFilter);
+    return page.map(user -> userMapper.mapToResponseDTO(user));
+  }
+
+  @Override
+  public Page<UserResponse> getFriendRequestsSendFromUser(Long id, PageFilter pageFilter) {
+    if(pageFilter == null){
+      pageFilter = new PageFilter();
     }
 
-    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id), pageFilter);
+    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id, MemberStatus.INVITED), pageFilter);
+    return page.map(user -> userMapper.mapToResponseDTO(user));
+  }
+
+  @Override
+  public Page<UserResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter) {
+    if(pageFilter == null){
+      pageFilter = new PageFilter();
+    }
+
+    Page<User> page = userRepository.findAll(UserSpecification.hasFriendInvites(id), pageFilter);
     return page.map(user -> userMapper.mapToResponseDTO(user));
   }
 

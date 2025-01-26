@@ -22,7 +22,7 @@ public class PageFilter implements Pageable {
 
   @Override
   public int getPageSize() {
-    return pageSize;
+    return pageSize < 0 ? DEFAULT_PAGE_SIZE : pageSize;
   }
 
   @Override

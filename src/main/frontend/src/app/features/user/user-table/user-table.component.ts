@@ -1,36 +1,43 @@
-import { AsyncPipe, DecimalPipe } from '@angular/common';
 import {
   Component,
+  ContentChild,
+  ContentChildren,
+  EventEmitter,
   inject,
   Input,
   OnDestroy,
   OnInit,
+  Output,
   QueryList,
-  ViewChildren,
 } from '@angular/core';
-import { Observable } from 'rxjs';
-
 import { FormsModule } from '@angular/forms';
 import { NgbHighlight, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import {
   NgbdSortableHeader,
   SortEvent,
 } from '../../../components/table/sortable.directive';
-import { UserService } from '../../../services/user.service';
 import { PageFilter } from '../../../models/page.modes';
 import { UserResponse } from '../../../models/user.models';
-import { HttpParams } from '@angular/common/http';
-import { ConnectionService } from '../../../services/connection.service';
 import { GlobalStateService } from '../../../services/global-state.service';
+import { IconComponent } from '../../../components/icon/icon.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
-  selector: 'ngbd-table-complete',
-  imports: [FormsModule, NgbHighlight, NgbdSortableHeader, NgbPaginationModule],
+  selector: 'user-table',
+  imports: [
+    FormsModule,
+    NgbHighlight,
+    NgbdSortableHeader,
+    NgbPaginationModule,
+    CommonModule,
+  ],
   templateUrl: './user-table.component.html',
   styleUrls: ['./user-table.component.css'],
 })
-export class UserTableComponent implements OnInit, OnDestroy {
+export class UserTable implements OnInit, OnDestroy {
+  private globalStateService = inject(GlobalStateService);
+
   @Input() userSearchCriteria: PageFilter = {
     page: 1,
     pageSize: 2,
@@ -39,82 +46,65 @@ export class UserTableComponent implements OnInit, OnDestroy {
     sortDirection: 'asc',
   };
 
-  private userService = inject(UserService);
-  private connectionService = inject(ConnectionService);
-
-  private globalStateService = inject(GlobalStateService);
-  users$: UserResponse[] = [];
-  total$: number = 0;
-  friends$: UserResponse[] = [];
-  totalFriends$: number = 0;
+  @Input() users$: UserResponse[] = [];
+  @Input() total$: number = 0;
+  @Input() friends$: UserResponse[] = [];
+  @Input() totalFriends$: number = 0;
   private searchTimeout: any;
 
-  ngOnInit(): void {
-    this.fetchUser();
-    this.fetchFriends();
-  }
+  currentUser = this.globalStateService.userDetails?.currentUser;
 
-  onPageChange() {
-    this.fetchUser();
-  }
+  @Input() fetchUsers!: (criteria: PageFilter) => void;
+  @Input() onAddFriend!: (userId: number) => void;
+  @Output() actionEvent = new EventEmitter<number>();
+  @Output() actionRemoveEvent = new EventEmitter<number>();
+  @ContentChild(IconComponent) addFriendIcon?: IconComponent;
+  @ContentChildren(IconComponent) icons: QueryList<IconComponent> =
+    new QueryList<any>();
 
-  fetchUser(): void {
-    const params = new HttpParams()
-      .set('page', this.userSearchCriteria.page)
-      .set('pageSize', this.userSearchCriteria.pageSize)
-      .set('searchKeyword', this.userSearchCriteria.searchKeyword)
-      .set('sortColumn', this.userSearchCriteria.sortColumn)
-      .set('sortDirection', this.userSearchCriteria.sortDirection);
-
-    this.userService.getAllUsers(params).subscribe((data) => {
-      console.log(data.content);
-      this.users$ = data.content;
-      this.total$ = data.totalElements;
+  ngAfterContentInit() {
+    // You can access all projected icons in the icons QueryList
+    this.icons.toArray().forEach((icon) => {
+      // Example: Listen for click events on each icon
+      icon.iconClick.subscribe(() => {
+        // You can handle the icon click events here
+        console.log('Icon clicked!');
+      });
     });
   }
-
-  fetchFriends(): void {
-    const senderId = this.globalStateService.userDetails?.currentUser.id;
-    if (senderId) {
-      const params = new HttpParams()
-        .set('page', this.userSearchCriteria.page)
-        .set('pageSize', this.userSearchCriteria.pageSize)
-        .set('searchKeyword', this.userSearchCriteria.searchKeyword)
-        .set('sortColumn', this.userSearchCriteria.sortColumn)
-        .set('sortDirection', this.userSearchCriteria.sortDirection);
-
-      this.userService.getFriendsOfUser(senderId, params).subscribe((data) => {
-        console.log(data.content);
-        this.friends$ = data.content;
-        this.totalFriends$ = data.totalElements;
-      });
+  ngOnInit(): void {
+    if (this.fetchUsers) {
+      this.fetchUsers(this.userSearchCriteria);
     }
   }
 
-  onSort(column: SortEvent): void {}
+  onPageChange(): void {
+    this.fetchUsers(this.userSearchCriteria);
+  }
 
-  onSearchChange() {
+  onSearchChange(): void {
     if (this.searchTimeout) {
       clearTimeout(this.searchTimeout);
     }
 
     this.searchTimeout = setTimeout(() => {
-      this.fetchUser();
+      this.fetchUsers(this.userSearchCriteria);
     }, 500);
   }
 
-  addFriend(userId: number): void {
-    const senderId = this.globalStateService.userDetails?.currentUser.id;
-    console.log(senderId, 'senderId');
-    if (senderId) {
-      this.connectionService
-        .sendFriendRequest({
-          senderId: senderId,
-          receiverId: userId,
-        })
-        .subscribe((data) => {});
-    }
+  onSort(column: SortEvent): void {}
+
+  addAction(userId: number): void {
+    this.actionEvent.emit(userId);
   }
 
-  ngOnDestroy(): void {}
+  removeAction(userId: number): void {
+    this.actionRemoveEvent.emit(userId);
+  }
+
+  ngOnDestroy(): void {
+    if (this.searchTimeout) {
+      clearTimeout(this.searchTimeout);
+    }
+  }
 }

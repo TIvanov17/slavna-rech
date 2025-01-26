@@ -24,4 +24,8 @@ public interface UserService extends UserDetailsService {
   boolean changeStatusOfFriendRequest(Long id, Long connectionId, MemberStatus status);
 
   Page<UserResponse> getFriendsOfUser(Long id, PageFilter pageFilter);
+
+  Page<UserResponse> getFriendRequestsSendFromUser(Long id, PageFilter pageFilter);
+
+  Page<UserResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter);
 }

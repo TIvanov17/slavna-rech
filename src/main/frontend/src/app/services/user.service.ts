@@ -32,4 +32,28 @@ export class UserService {
       }
     );
   }
+
+  public getFriendRequestsSendFromUser(
+    userId: number,
+    params: HttpParams
+  ): Observable<Page<UserResponse>> {
+    return this.httpClient.get<Page<UserResponse>>(
+      `${this.baseUrl}/${userId}/connections/friend-requests`,
+      {
+        params,
+      }
+    );
+  }
+
+  public getFriendInvitesReceivedForUser(
+    userId: number,
+    params: HttpParams
+  ): Observable<Page<UserResponse>> {
+    return this.httpClient.get<Page<UserResponse>>(
+      `${this.baseUrl}/${userId}/connections/friend-invites`,
+      {
+        params,
+      }
+    );
+  }
 }

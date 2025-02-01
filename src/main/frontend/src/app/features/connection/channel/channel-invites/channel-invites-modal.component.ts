@@ -41,23 +41,10 @@ import { HttpParams } from '@angular/common/http';
   templateUrl: './channel-invites-modal.component.html',
 })
 export class ChannelInvitesModal {
-  @Input() channelConnectionRequest: ChannelConnectionRequest = {
-    userId: -1,
-    name: '',
-    description: '',
-  };
-  @Input() selectedChannel: ConnectionResponse | null = null;
-
-  @Output() saveAction = new EventEmitter<void>();
   closeResult = '';
-  @ViewChild('content', { static: true }) content!: TemplateRef<any>;
-
-  constructor(private modalService: NgbModal) {}
-
   users$: UserConnectionResponse[] = [];
   total$: number = 0;
   totalPages$: number = 0;
-
   searchCriteria: PageFilter = {
     page: 1,
     pageSize: 2,
@@ -65,6 +52,18 @@ export class ChannelInvitesModal {
     sortColumn: 'username',
     sortDirection: 'asc',
   };
+
+  @Input() channelConnectionRequest: ChannelConnectionRequest = {
+    userId: -1,
+    name: '',
+    description: '',
+  };
+  @Input() selectedChannel: ConnectionResponse | null = null;
+  @Output() saveAction = new EventEmitter<void>();
+  @ViewChild('content', { static: true }) content!: TemplateRef<any>;
+
+  constructor(private modalService: NgbModal) {}
+
   private userService = inject(UserService);
   private globalStateService = inject(GlobalStateService);
   private connectionService = inject(ConnectionService);
@@ -79,8 +78,6 @@ export class ChannelInvitesModal {
   };
 
   addToChannel = (userId: number): void => {
-    console.log(userId, 'userId');
-    console.log(this.selectedChannel, 'connectionId');
     const senderId = this.globalStateService.userDetails?.currentUser.id;
     if (senderId && this.selectedChannel?.id) {
       this.connectionService

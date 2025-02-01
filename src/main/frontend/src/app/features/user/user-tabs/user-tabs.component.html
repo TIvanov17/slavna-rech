@@ -41,10 +41,10 @@
 
   <div [hidden]="activeTab !== 'users'">
     <user-table
-      [userSearchCriteria]="searchCriteria"
+      [userSearchCriteria]="usersSearchCriteria"
       [users$]="users$"
       [total$]="total$"
-      [fetchUsers]="fetchAllUsers"
+      (fetchUsers)="fetchAllUsers(usersSearchCriteria)"
       ><app-icon
         #addFriendIconComponent
         [iconClass]="'fa-solid fa-user-plus'"
@@ -59,10 +59,10 @@
 
   <div [hidden]="activeTab !== 'friends'">
     <user-table
-      [userSearchCriteria]="searchCriteria"
+      [userSearchCriteria]="friendsSearchCriteria"
       [users$]="friends$"
       [total$]="totalFriends$"
-      [fetchUsers]="fetchFriends"
+      (fetchUsers)="fetchFriends(friendsSearchCriteria)"
       ><app-icon
         #addFriendIconComponent
         [iconClass]="'a-sharp fa-solid fa-xmark'"
@@ -74,10 +74,10 @@
 
   <div [hidden]="activeTab !== 'requests'">
     <user-table
-      [userSearchCriteria]="searchCriteria"
+      [userSearchCriteria]="requestsSearchCriteria"
       [users$]="requests$"
       [total$]="totalRequests$"
-      [fetchUsers]="fetchFriendRequestsSendFromUser"
+      (fetchUsers)="fetchFriendRequestsSendFromUser(requestsSearchCriteria)"
       ><app-icon
         #addFriendIconComponent
         [iconClass]="'a-sharp fa-solid fa-xmark'"
@@ -91,10 +91,10 @@
 
   <div [hidden]="activeTab !== 'invites'">
     <user-table
-      [userSearchCriteria]="searchCriteria"
+      [userSearchCriteria]="invitesSearchCriteria"
       [users$]="invites$"
       [total$]="totalInvites$"
-      [fetchUsers]="fetchFriendInvitesReceivedForUser"
+      (fetchUsers)="fetchFriendInvitesReceivedForUser(invitesSearchCriteria)"
     >
       <app-icon
         #addFriendIconComponent

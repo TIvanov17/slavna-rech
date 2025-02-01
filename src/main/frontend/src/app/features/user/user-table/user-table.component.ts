@@ -48,7 +48,7 @@ export class UserTable implements OnInit, OnDestroy {
     sortColumn: 'username',
     sortDirection: 'asc',
   };
-  @Input() isScrollable: boolean = true;
+  @Input() isScrollable: boolean = false;
   @Input() users$: UserConnectionResponse[] = [];
   @Input() total$: number = 0;
   @Input() totalPages$: number = 0;
@@ -59,7 +59,7 @@ export class UserTable implements OnInit, OnDestroy {
 
   currentUser = this.globalStateService.userDetails?.currentUser;
 
-  @Input() fetchUsers!: (criteria: PageFilter) => void;
+  @Output() fetchUsers = new EventEmitter<number>();
   @Output() actionEvent = new EventEmitter<number>();
   @Output() actionRemoveEvent = new EventEmitter<number>();
   @ContentChild(IconComponent) addFriendIcon?: IconComponent;
@@ -75,13 +75,11 @@ export class UserTable implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.fetchUsers) {
-      this.fetchUsers(this.userSearchCriteria);
-    }
+    this.fetchUsers.emit();
   }
 
   onPageChange(): void {
-    this.fetchUsers(this.userSearchCriteria);
+    this.fetchUsers.emit();
   }
 
   onSearchChange(): void {
@@ -90,7 +88,7 @@ export class UserTable implements OnInit, OnDestroy {
     }
 
     this.searchTimeout = setTimeout(() => {
-      this.fetchUsers(this.userSearchCriteria);
+      this.fetchUsers.emit();
     }, 500);
   }
 
@@ -115,9 +113,8 @@ export class UserTable implements OnInit, OnDestroy {
     this.isLoading = true;
     setTimeout(() => {
       this.userSearchCriteria.page += 1;
-      console.log(this.totalPages$, 'this.totalPages');
       if (this.totalPages$ >= this.userSearchCriteria.page) {
-        this.fetchUsers(this.userSearchCriteria);
+        this.fetchUsers.emit();
       }
       this.isLoading = false;
     }, 1000);

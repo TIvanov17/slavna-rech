@@ -24,25 +24,49 @@ import { MemberStatus } from '../../../enums/member-status.enum';
 export class UserTabs {
   activeTab = 'users';
 
-  users$: UserConnectionResponse[] = [];
-  total$: number = 0;
-
-  friends$: UserConnectionResponse[] = [];
-  totalFriends$ = 0;
-
-  requests$: UserConnectionResponse[] = [];
-  totalRequests$ = 0;
-
-  invites$: UserConnectionResponse[] = [];
-  totalInvites$ = 0;
-
-  searchCriteria: PageFilter = {
+  usersSearchCriteria: PageFilter = {
     page: 1,
     pageSize: 2,
     searchKeyword: '',
     sortColumn: 'username',
     sortDirection: 'asc',
   };
+  users$: UserConnectionResponse[] = [];
+  total$: number = 0;
+
+  friendsSearchCriteria: PageFilter = {
+    page: 1,
+    pageSize: 2,
+    searchKeyword: '',
+    sortColumn: 'username',
+    sortDirection: 'asc',
+  };
+
+  friends$: UserConnectionResponse[] = [];
+  totalFriends$ = 0;
+
+  requestsSearchCriteria: PageFilter = {
+    page: 1,
+    pageSize: 2,
+    searchKeyword: '',
+    sortColumn: 'username',
+    sortDirection: 'asc',
+  };
+
+  requests$: UserConnectionResponse[] = [];
+  totalRequests$ = 0;
+
+  invitesSearchCriteria: PageFilter = {
+    page: 1,
+    pageSize: 2,
+    searchKeyword: '',
+    sortColumn: 'username',
+    sortDirection: 'asc',
+  };
+
+  invites$: UserConnectionResponse[] = [];
+  totalInvites$ = 0;
+
   private userService = inject(UserService);
   private globalStateService = inject(GlobalStateService);
   private connectionService = inject(ConnectionService);
@@ -135,7 +159,6 @@ export class UserTabs {
     userId: number,
     connectionId: number
   ): void => {
-    console.log(userId);
     const senderId = this.globalStateService.userDetails?.currentUser.id;
     if (senderId) {
       this.userService
@@ -144,21 +167,20 @@ export class UserTabs {
           connectionId,
           MemberStatus.ACCEPTED
         )
-        .subscribe((data) => {});
+        .subscribe((data) => this.onTabChange(this.activeTab));
     }
   };
 
   onTabChange(tab: string): void {
     this.activeTab = tab;
-
     if (tab === 'users') {
-      this.fetchAllUsers(this.searchCriteria);
+      this.fetchAllUsers(this.usersSearchCriteria);
     } else if (tab === 'friends') {
-      this.fetchFriends(this.searchCriteria);
+      this.fetchFriends(this.friendsSearchCriteria);
     } else if (tab === 'requests') {
-      this.fetchFriendRequestsSendFromUser(this.searchCriteria);
+      this.fetchFriendRequestsSendFromUser(this.requestsSearchCriteria);
     } else if (tab === 'invites') {
-      this.fetchFriendInvitesReceivedForUser(this.searchCriteria);
+      this.fetchFriendInvitesReceivedForUser(this.invitesSearchCriteria);
     }
   }
 }

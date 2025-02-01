@@ -1,8 +1,12 @@
 package pu.fmi.slavnarech.services.user;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pu.fmi.slavnarech.annotations.TransactionalService;
 import pu.fmi.slavnarech.entities.connection.Connection;
@@ -123,7 +127,51 @@ public class UserServiceImpl implements UserService {
       pageFilter = new PageFilter();
     }
 
-    return userRepository.getFriendInvitesFor(id, pageFilter);
+    List<UserConnectionResponse> userConnectionResponses = new ArrayList<>();
+
+    Optional<User> user = userRepository.findById(id);
+
+    if (user.isEmpty()) {
+      return new PageImpl<>(
+          userConnectionResponses, PageRequest.of(1, 2), userConnectionResponses.size());
+    }
+
+    user.get().getMembers().stream()
+        .filter(m -> m.getStatus().equals(MemberStatus.INVITED))
+        .forEach(
+            m -> {
+              List<Member> members = m.getConnection().getMembers();
+              members.stream()
+                  .filter(m1 -> !m1.getUser().getId().equals(id))
+                  .forEach(
+                      (m1) -> {
+                        UserConnectionResponse userConnectionResponse =
+                            new UserConnectionResponse();
+                        userConnectionResponse.setId(m1.getUser().getId());
+                        userConnectionResponse.setConnectionId(m.getConnection().getId());
+                        userConnectionResponse.setActive(true);
+                        userConnectionResponse.setUsername(m1.getUser().getUsername());
+                        userConnectionResponse.setEmail(m1.getUser().getEmail());
+                        userConnectionResponses.add(userConnectionResponse);
+                      });
+            });
+
+    int pageNumber = pageFilter.getPageNumber();
+    int pageSize = pageFilter.getPageSize();
+
+    int start = (int) pageFilter.getOffset();
+    int end = Math.min(start + pageSize, userConnectionResponses.size());
+
+    if (start > userConnectionResponses.size()) {
+      start = userConnectionResponses.size();
+    }
+
+    if (start < end) {
+      List<UserConnectionResponse> pageContent = userConnectionResponses.subList(start, end);
+      return new PageImpl<>(pageContent, pageFilter, userConnectionResponses.size());
+    }
+
+    return new PageImpl<>(new ArrayList<>(), pageFilter, userConnectionResponses.size());
   }
 
   @Override

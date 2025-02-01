@@ -7,8 +7,6 @@ import pu.fmi.slavnarech.utils.PageFilter;
 
 public interface UserRepositoryCustom {
 
-  Page<UserConnectionResponse> getFriendInvitesFor(Long id, PageFilter pageFilter);
-
   Page<UserConnectionResponse> getFriendsOfUser(Long id, PageFilter pageFilter);
 
   Page<Connection> getChannels(Long id, PageFilter pageFilter);

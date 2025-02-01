@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import pu.fmi.slavnarech.annotations.ValidRestApi;
 import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
+import pu.fmi.slavnarech.entities.member.dtos.MemberResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserConnectionResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserRequest;
 import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
+import pu.fmi.slavnarech.services.member.MemberService;
 import pu.fmi.slavnarech.services.user.UserService;
 import pu.fmi.slavnarech.utils.PageFilter;
 
@@ -22,6 +24,13 @@ import pu.fmi.slavnarech.utils.PageFilter;
 public class UserApi {
 
   @Autowired private UserService userService;
+
+  @Autowired private MemberService memberService;
+
+  @GetMapping("/{id}/connections/{connectionId}")
+  public ResponseEntity<MemberResponse> getUserById(@PathVariable Long id, @PathVariable Long connectionId){
+    return ResponseEntity.ok(memberService.getMember(id, connectionId));
+  }
 
   @GetMapping
   public ResponseEntity<Page<UserResponse>> listAllUsers(PageFilter pageFilter) {

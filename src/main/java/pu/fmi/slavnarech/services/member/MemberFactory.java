@@ -29,6 +29,7 @@ public class MemberFactory {
   public MemberResponse mapToResponse(Member member) {
     User user = member.getUser();
     return MemberResponse.builder()
+        .connectionId(member.getConnection().getId())
         .userId(user.getId())
         .username(user.getUsername())
         .email(user.getEmail())

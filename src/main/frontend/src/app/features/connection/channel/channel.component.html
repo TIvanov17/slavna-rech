@@ -87,11 +87,15 @@
     <channel-settings [selectedChannel]="selectedChannel"></channel-settings>
     <ul class="members-container">
       @for(member of selectedChannel?.members; track member) {
-      <div class="member">
+      <div
+        class="member"
+        (click)="openUserProflie(member.userId, selectedChannel?.id)"
+      >
         <i class="fa-solid fa-user"></i>
         <li class="members-username">
           {{ member.username }}
         </li>
+        <user-profile #userProfile [user]="userWithProfile"></user-profile>
       </div>
 
       }

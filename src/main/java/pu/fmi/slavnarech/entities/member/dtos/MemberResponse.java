@@ -10,6 +10,8 @@ import pu.fmi.slavnarech.entities.role.RoleName;
 @Builder
 public class MemberResponse {
 
+  private Long connectionId;
+
   private Long userId;
 
   private String username;

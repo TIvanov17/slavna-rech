@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 import { Page, PageFilter } from '../models/page.modes';
 import { MemberStatus } from '../enums/member-status.enum';
 import { ConnectionResponse } from '../models/connection.modes';
+import { MemberResponse } from '../models/member.models';
 
 @Injectable({
   providedIn: 'root',
@@ -85,6 +86,15 @@ export class UserService {
     return this.httpClient.put(
       `${this.baseUrl}/${userId}/connection/${connectionId}/member/${memberStatus}`,
       null
+    );
+  }
+
+  public getMemberByUserAndConnectionId(
+    userId: number,
+    connectionId: number
+  ): Observable<MemberResponse> {
+    return this.httpClient.get<MemberResponse>(
+      `${this.baseUrl}/${userId}/connections/${connectionId}`
     );
   }
 }

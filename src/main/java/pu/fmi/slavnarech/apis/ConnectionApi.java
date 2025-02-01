@@ -19,7 +19,8 @@ import pu.fmi.slavnarech.services.connection.ConnectionService;
 @ValidRestApi("api/v1/connections")
 public class ConnectionApi {
 
-  @Autowired private ConnectionService connectionService;
+  @Autowired
+  private ConnectionService connectionService;
 
   @PostMapping("/channel")
   public ResponseEntity<ConnectionResponse> createChannel(
@@ -58,4 +59,11 @@ public class ConnectionApi {
   public ResponseEntity<Boolean> deleteConnection(@PathVariable Long id) {
     return ResponseEntity.ok(connectionService.deleteConnection(id));
   }
+
+  @DeleteMapping("/channels/{connectionId}/user/{userId}")
+  public ResponseEntity<ConnectionResponse> removeUserFromChannel(
+      @PathVariable Long connectionId, @PathVariable Long userId) {
+    return ResponseEntity.ok(connectionService.removeUserFromChannel(connectionId, userId));
+  }
+
 }

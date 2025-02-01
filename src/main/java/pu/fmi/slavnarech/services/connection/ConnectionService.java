@@ -17,4 +17,6 @@ public interface ConnectionService {
   ConnectionResponse getById(Long id);
 
   boolean deleteConnection(Long id);
+
+  ConnectionResponse removeUserFromChannel(Long connectionId, Long userId);
 }

@@ -19,6 +19,9 @@ public class UserMapper {
   }
 
   public UserResponse mapToResponseDTO(User user) {
+    if(user == null){
+      return null;
+    }
     return UserResponse.builder()
         .id(user.getId())
         .username(user.getUsername())
@@ -28,9 +31,4 @@ public class UserMapper {
         .build();
   }
 
-  //  public UserConnectionResponse mapToResponseDTO(User user) {
-  //    return UserConnectionResponse.builder()
-  //        .userResponse(mapToResponseDTO(user))
-  //        .build();
-  //  }
 }

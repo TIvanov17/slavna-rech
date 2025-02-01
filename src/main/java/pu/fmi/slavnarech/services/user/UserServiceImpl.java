@@ -70,6 +70,11 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
+  public UserResponse getUserById(Long id) {
+    return userMapper.mapToResponseDTO(userRepository.findById(id).orElse(null));
+  }
+
+  @Override
   public User loadUserByEmail(String email) {
     return userRepository.findByEmail(email);
   }

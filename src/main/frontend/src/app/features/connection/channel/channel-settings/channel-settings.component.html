@@ -1,5 +1,6 @@
 <div>
   <div class="sidebar">
+    @if(role == RoleName.ADMIN || role == RoleName.OWNER){
     <div class="nav-create-button">
       <i class="fa-sharp fa-regular fa-plus" (click)="openChannelModal()"></i>
       <channel-invites-modal
@@ -7,6 +8,7 @@
         #channelModal
       ></channel-invites-modal>
     </div>
+    } @if(role == RoleName.ADMIN || role == RoleName.OWNER){
     <div class="nav-button">
       <i class="fa-solid fa-pen-to-square" (click)="openUpdateChannel()"></i>
       <channel-create-modal
@@ -16,8 +18,10 @@
         (saveAction)="updateChannel()"
       ></channel-create-modal>
     </div>
+    } @if(role == RoleName.OWNER){
     <div class="nav-button">
       <i class="fa-sharp fa-solid fa-trash" (click)="openChannelModal()"></i>
     </div>
+    }
   </div>
 </div>

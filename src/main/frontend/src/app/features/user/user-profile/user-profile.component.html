@@ -1,0 +1,57 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">User Profile</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <div class="profile-card">
+      <div class="card-header">
+        <h3>{{ user?.username }}</h3>
+      </div>
+      <div class="card-body">
+        <p><strong>Email:</strong> {{ user?.email }}</p>
+        <p><strong>Date:</strong> {{ user?.joinDate }}</p>
+        <p><strong>Role:</strong> {{ user?.role }}</p>
+
+        @if(user?.userId != userId){ @if(role === RoleName.ADMIN){
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="onRemoveClicked(user?.userId, user?.connectionId)"
+        >
+          Remove
+        </button>
+        } @if(role === RoleName.OWNER){
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="onChangeRoleClicked(RoleName.ADMIN)"
+        >
+          {{ RoleName.ADMIN }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-outline-secondary"
+          (click)="onChangeRoleClicked(RoleName.GUESS)"
+        >
+          {{ RoleName.GUESS }}
+        </button>
+        } }
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-secondary"
+      (click)="modal.close('Save click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>

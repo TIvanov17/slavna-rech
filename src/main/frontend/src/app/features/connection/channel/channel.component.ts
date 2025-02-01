@@ -1,9 +1,19 @@
-import { Component, inject, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
 import { WebSocketService } from '../../../services/websocket.service';
 import { FormsModule } from '@angular/forms';
 import { UserService } from '../../../services/user.service';
-import { UserConnectionResponse } from '../../../models/user.models';
+import {
+  UserConnectionResponse,
+  UserResponse,
+} from '../../../models/user.models';
 import { Tabs } from '../../../components/tabs/tab.component';
 import { GlobalStateService } from '../../../services/global-state.service';
 import { MessageDTO, MessageRequest } from '../../../models/message.model';
@@ -15,6 +25,9 @@ import { ChannelSettings } from './channel-settings/channel-settings.component';
 import { SidebarMenu } from '../../../enums/sidebar-menu.enum';
 import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
+import { UserProfile } from '../../user/user-profile/user-profile.component';
+import { MemberResponse } from '../../../models/member.models';
+import { MemberService } from '../../../services/member.service';
 
 @Component({
   standalone: true,
@@ -26,6 +39,7 @@ import { CommonModule } from '@angular/common';
     ChannelSettings,
     NgbAccordionModule,
     CommonModule,
+    UserProfile,
   ],
 })
 export class ChannelPage implements OnInit, OnDestroy {
@@ -41,10 +55,13 @@ export class ChannelPage implements OnInit, OnDestroy {
   selectedUser: UserConnectionResponse | null = null;
   selectedChannel: ConnectionResponse | null = null;
 
+  userWithProfile: MemberResponse | null = null;
+
   private subscription: Subscription | undefined;
   private webSocketService = inject(WebSocketService);
   private userService = inject(UserService);
   private globalStateService = inject(GlobalStateService);
+  private memberService = inject(MemberService);
   private messageService = inject(MessageService);
 
   historyMessages: MessageDTO[] = [];
@@ -57,6 +74,8 @@ export class ChannelPage implements OnInit, OnDestroy {
     sortColumn: 'username',
     sortDirection: 'asc',
   };
+
+  @ViewChild('userProfile') userProfile!: UserProfile;
 
   ngOnInit() {
     this.subscription = this.webSocketService
@@ -139,7 +158,6 @@ export class ChannelPage implements OnInit, OnDestroy {
     this.messageService
       .getMessageForConnection(user.connectionId)
       .subscribe((data) => {
-        // const contentString = data.map((message) => message.content);
         this.historyMessages = data;
       });
   }
@@ -155,6 +173,15 @@ export class ChannelPage implements OnInit, OnDestroy {
     }
     this.webSocketService.disconnect();
     this.webSocketService.connect(channel.id);
+
+    if (this.userId) {
+      this.memberService
+        .getMemberByUserAndConnectionId(this.userId, this.selectedChannel?.id)
+        .subscribe((data) => {
+          this.globalStateService.role = data.role;
+        });
+    }
+
     this.subscription = this.webSocketService
       .getMessages()
       .subscribe((data) => {
@@ -165,7 +192,6 @@ export class ChannelPage implements OnInit, OnDestroy {
     this.messageService
       .getMessageForConnection(channel.id)
       .subscribe((data) => {
-        // const contentString = data.map((message) => message.content);
         this.historyMessages = data;
       });
   }
@@ -200,6 +226,22 @@ export class ChannelPage implements OnInit, OnDestroy {
 
   formatMessage(content: string): string {
     return content.replace(/\n/g, '<br/>');
+  }
+
+  onUserClick(userId: number, connectionId: number): void {
+    this.userService
+      .getMemberByUserAndConnectionId(userId, connectionId)
+      .subscribe((data) => {
+        this.userWithProfile = data;
+      });
+  }
+
+  openUserProflie(userId: number, connectionId: number | undefined) {
+    if (connectionId === undefined) {
+      return;
+    }
+    this.onUserClick(userId, connectionId);
+    this.userProfile.open();
   }
 
   ngOnDestroy() {

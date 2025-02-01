@@ -20,6 +20,8 @@ public interface UserService extends UserDetailsService {
 
   User getById(Long id);
 
+  UserResponse getUserById(Long id);
+
   User loadUserByEmail(String email);
 
   boolean changeStatusOfFriendRequest(Long id, Long connectionId, MemberStatus status);

@@ -155,4 +155,32 @@ public class ConnectionServiceImpl implements ConnectionService {
     Optional<Connection> optionalConnection = connectionRepository.findById(id);
     return optionalConnection.orElseThrow(() -> new NotFoundException(Connection.class, id));
   }
+
+  @Override
+  public ConnectionResponse removeUserFromChannel(Long connectionId, Long userId) {
+
+    User user = userService.getById(userId);
+    if (user == null) {
+      return null;
+    }
+
+    Optional<Connection> optionalConnection = connectionRepository.findById(connectionId);
+    if (optionalConnection.isEmpty()) {
+      return null;
+    }
+
+    Optional<Member> existMember =
+        optionalConnection.get().getMembers().stream()
+            .filter(member -> member.getUser().getId().equals(user.getId()))
+            .findFirst();
+
+    if (existMember.isEmpty()) {
+      return null;
+    }
+
+    existMember.get().setActive(false);
+    memberRepository.save(existMember.get());
+
+    return connectionFactory.mapToResponse(optionalConnection.get());
+  }
 }

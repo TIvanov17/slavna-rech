@@ -33,19 +33,21 @@ public class MessageRepositoryImpl implements MessageRepositoryCustom {
     Join<Member, User> senderUserJoin = senderJoin.join(Member_.user);
     Join<Member, Connection> connectionJoin = senderJoin.join(Member_.connection);
 
-    query.select(
-        cb.construct(
-            MessageDTO.class,
-            connectionJoin.get(Connection_.id),
+    query
+        .select(
             cb.construct(
-                UserResponse.class,
-                senderUserJoin.get(User_.id),
-                senderUserJoin.get(User_.username),
-                senderUserJoin.get(User_.email),
-                senderUserJoin.get(User_.createdOn),
-                senderUserJoin.get(User_.isActive)),
-            messageRoot.get(Message_.content),
-            messageRoot.get(Message_.createdOn)));
+                MessageDTO.class,
+                connectionJoin.get(Connection_.id),
+                cb.construct(
+                    UserResponse.class,
+                    senderUserJoin.get(User_.id),
+                    senderUserJoin.get(User_.username),
+                    senderUserJoin.get(User_.email),
+                    senderUserJoin.get(User_.createdOn),
+                    senderUserJoin.get(User_.isActive)),
+                messageRoot.get(Message_.content),
+                messageRoot.get(Message_.createdOn)))
+        .where(cb.equal(connectionJoin.get(Connection_.id), connectionId));
 
     return entityManager.createQuery(query).getResultList();
   }

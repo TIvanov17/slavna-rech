@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import pu.fmi.slavnarech.entities.connection.Connection;
 import pu.fmi.slavnarech.entities.connection.ConnectionType;
 import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
+import pu.fmi.slavnarech.entities.member.Member;
 import pu.fmi.slavnarech.services.member.MemberFactory;
 
 @Component
@@ -33,6 +34,7 @@ public class ConnectionFactory {
         .connectionType(connection.getConnectionType())
         .members(
             connection.getMembers().stream()
+                .filter(Member::isActive)
                 .map(member -> memberFactory.mapToResponse(member))
                 .toList())
         .isActive(connection.isActive())

@@ -1,0 +1,26 @@
+.profile-card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  width: 300px;
+  cursor: pointer;
+  padding: 10px;
+  transition: 0.3s;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card-body {
+  margin-top: 10px;
+}
+
+.card-body p {
+  margin: 5px 0;
+}
+
+.profile-card.open .card-body {
+  display: block;
+}

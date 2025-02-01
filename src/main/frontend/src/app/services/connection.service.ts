@@ -48,4 +48,12 @@ export class ConnectionService {
       { headers }
     );
   }
+
+  public removeUserFromChannel(connectionId: number, userId: number) {
+    const headers = new HttpHeaders().set('Content-Type', 'application/json');
+    return this.httpClient.delete<any>(
+      `${this.baseUrl}/channels/${connectionId}/user/${userId}`,
+      { headers }
+    );
+  }
 }

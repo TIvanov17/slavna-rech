@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { Page, PageFilter } from '../models/page.modes';
 import { MemberStatus } from '../enums/member-status.enum';
+import { ConnectionResponse } from '../models/connection.modes';
 
 @Injectable({
   providedIn: 'root',
@@ -34,6 +35,18 @@ export class UserService {
   ): Observable<Page<UserConnectionResponse>> {
     return this.httpClient.get<Page<UserConnectionResponse>>(
       `${this.baseUrl}/${userId}/connections/friends`,
+      {
+        params,
+      }
+    );
+  }
+
+  public getChannelsOfUser(
+    userId: number,
+    params: HttpParams
+  ): Observable<Page<ConnectionResponse>> {
+    return this.httpClient.get<Page<ConnectionResponse>>(
+      `${this.baseUrl}/${userId}/connections/channels`,
       {
         params,
       }

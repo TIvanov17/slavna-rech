@@ -1,13 +1,17 @@
 package pu.fmi.slavnarech.services.connection;
 
+import static pu.fmi.slavnarech.utils.OperationUtils.updateIfChanged;
+
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import pu.fmi.slavnarech.annotations.TransactionalService;
 import pu.fmi.slavnarech.entities.connection.Connection;
 import pu.fmi.slavnarech.entities.connection.ConnectionType;
 import pu.fmi.slavnarech.entities.connection.dtos.ChannelConnectionRequest;
 import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
+import pu.fmi.slavnarech.entities.connection.dtos.UpdateChannelRequest;
 import pu.fmi.slavnarech.entities.member.Member;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.role.Role;
@@ -52,10 +56,26 @@ public class ConnectionServiceImpl implements ConnectionService {
             connectionRequest.getConnectionType());
     connection = connectionRepository.save(connection);
 
-    Member member = memberFactory.mapToEntity(user, connection, ownerRole);
+    Member member = memberFactory.mapToEntity(user, connection, ownerRole, MemberStatus.ACCEPTED);
     connection.setMembers(List.of(memberRepository.save(member)));
 
     return connectionFactory.mapToResponse(connection);
+  }
+
+
+  @Override
+  public ConnectionResponse updateChannel(UpdateChannelRequest updateChannelRequest) {
+    Optional<Connection> optionalConnection = connectionRepository.findById(updateChannelRequest.getConnectionId());
+
+    AtomicReference<ConnectionResponse> connectionResponse = new AtomicReference<>();
+    optionalConnection.ifPresentOrElse(connection -> {
+      updateIfChanged(connection.getName(), updateChannelRequest.getName(), connection::setName);
+      updateIfChanged(connection.getDescription(), updateChannelRequest.getDescription(), connection::setDescription);
+      connectionRepository.save(connection);
+      connectionResponse.set(connectionFactory.mapToResponse(connection));
+    }, () -> {});
+
+    return connectionResponse.get();
   }
 
   @Override
@@ -72,15 +92,42 @@ public class ConnectionServiceImpl implements ConnectionService {
     connection = connectionRepository.save(connection);
 
     Role friendRole = roleService.getByName(RoleName.FRIEND);
-    Member senderMember = memberFactory.mapToEntity(userSender, connection, friendRole);
-    senderMember.setStatus(MemberStatus.ACCEPTED);
+    Member senderMember = memberFactory.mapToEntity(userSender, connection, friendRole, MemberStatus.ACCEPTED);
+    Member receiverMember = memberFactory.mapToEntity(userReceiver, connection, friendRole, MemberStatus.INVITED);
 
-    Member receiverMember = memberFactory.mapToEntity(userReceiver, connection, friendRole);
-    receiverMember.setStatus(MemberStatus.INVITED);
     connection.setMembers(
         List.of(memberRepository.save(senderMember), memberRepository.save(receiverMember)));
 
     return connectionFactory.mapToResponse(connection);
+  }
+
+  @Override
+  public ConnectionResponse addUserToChannel(Long connectionId, Long userId) {
+
+    User user = userService.getById(userId);
+    if(user == null){
+      return null;
+    }
+
+    Optional<Connection> optionalConnection = connectionRepository.findById(connectionId);
+    if(optionalConnection.isEmpty()){
+      return null;
+    }
+
+    Optional<Member> existMember =
+        optionalConnection.get().getMembers().stream()
+            .filter(member -> member.getUser().getId().equals(user.getId()))
+            .findFirst();
+
+    if(existMember.isPresent()){
+      return null;
+    }
+
+    Role roleGuess = roleService.getByName(RoleName.GUESS);
+    Member member = memberFactory.mapToEntity(user, optionalConnection.get(), roleGuess, MemberStatus.ACCEPTED);
+    optionalConnection.get().getMembers().add(memberRepository.save(member));
+
+    return connectionFactory.mapToResponse(optionalConnection.get());
   }
 
   @Override

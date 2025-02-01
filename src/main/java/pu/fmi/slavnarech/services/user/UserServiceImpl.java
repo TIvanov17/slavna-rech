@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import pu.fmi.slavnarech.annotations.TransactionalService;
 import pu.fmi.slavnarech.entities.connection.Connection;
+import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
 import pu.fmi.slavnarech.entities.member.Member;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.user.User;
@@ -18,6 +19,7 @@ import pu.fmi.slavnarech.repositories.MemberRepository;
 import pu.fmi.slavnarech.repositories.connection.ConnectionRepository;
 import pu.fmi.slavnarech.repositories.user.UserRepository;
 import pu.fmi.slavnarech.repositories.user.UserSpecification;
+import pu.fmi.slavnarech.services.connection.ConnectionFactory;
 import pu.fmi.slavnarech.utils.PageFilter;
 
 @TransactionalService
@@ -30,6 +32,8 @@ public class UserServiceImpl implements UserService {
   @Autowired private MemberRepository memberRepository;
 
   @Autowired private UserMapper userMapper;
+
+  @Autowired private ConnectionFactory connectionFactory;
 
   @Override
   public Page<UserResponse> searchAllByUsername(PageFilter pageFilter) {
@@ -84,13 +88,23 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<UserResponse> getFriendsOfUser(Long id, PageFilter pageFilter) {
+  public Page<UserConnectionResponse> getFriendsOfUser(Long id, PageFilter pageFilter) {
     if(pageFilter == null){
       pageFilter = new PageFilter();
     }
 
-    Page<User> page = userRepository.findAll(UserSpecification.hasFriends(id), pageFilter);
-    return page.map(user -> userMapper.mapToResponseDTO(user));
+    return userRepository.getFriendsOfUser(id, pageFilter);
+  }
+
+
+  @Override
+  public Page<ConnectionResponse> getChannelsOfUser(Long id, PageFilter pageFilter) {
+    if(pageFilter == null){
+      pageFilter = new PageFilter();
+    }
+
+    Page<Connection> connections = userRepository.getChannels(id, pageFilter);
+    return connections.map(connection -> connectionFactory.mapToResponse(connection));
   }
 
   @Override

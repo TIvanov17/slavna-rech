@@ -1,7 +1,9 @@
 package pu.fmi.slavnarech.services.message;
 
 import java.time.LocalDateTime;
-import pu.fmi.slavnarech.entities.connection.Connection;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import pu.fmi.slavnarech.entities.member.Member;
 import pu.fmi.slavnarech.entities.message.Message;
 import pu.fmi.slavnarech.entities.message.dtos.MessageRequest;
@@ -12,23 +14,25 @@ import pu.fmi.slavnarech.services.connection.ConnectionService;
 import pu.fmi.slavnarech.services.member.MemberService;
 import pu.fmi.slavnarech.services.user.UserService;
 
+@Service
 public class MessageServiceImpl implements MessageService {
 
+  @Autowired
   private UserService userService;
 
+  @Autowired
   private ConnectionService connectionService;
 
+  @Autowired
   private MemberService memberService;
 
+  @Autowired
   private MessageRepository messageRepository;
 
   @Override
   public MessageResponse createMessage(MessageRequest messageRequest) {
 
     User userSender = userService.getById(messageRequest.getSenderId());
-    User userReceiver = userService.getById(messageRequest.getReceiverId());
-
-    // friend connection between 1 and 2
     Member member = memberService.getByUserAndConnection(userSender.getId(), messageRequest.getConnectionId());
 
     Message message = Message.builder()
@@ -45,5 +49,11 @@ public class MessageServiceImpl implements MessageService {
         .content(message.getContent())
         .createdOn(message.getCreatedOn())
         .build();
+  }
+
+  @Override
+  public List<MessageResponse> getHistoryOfMessagesByConnection(Long connectionId) {
+    List<Message> messages = messageRepository.findBySenderConnectionId(connectionId);
+    return messages.stream().map(message -> MessageResponse.builder().content(message.getContent()).build()).toList();
   }
 }

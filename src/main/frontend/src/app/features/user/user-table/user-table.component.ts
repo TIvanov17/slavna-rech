@@ -48,12 +48,14 @@ export class UserTable implements OnInit, OnDestroy {
     sortColumn: 'username',
     sortDirection: 'asc',
   };
-
+  @Input() isScrollable: boolean = true;
   @Input() users$: UserConnectionResponse[] = [];
   @Input() total$: number = 0;
+  @Input() totalPages$: number = 0;
   @Input() friends$: UserConnectionResponse[] = [];
   @Input() totalFriends$: number = 0;
   private searchTimeout: any;
+  isLoading = false;
 
   currentUser = this.globalStateService.userDetails?.currentUser;
 
@@ -71,6 +73,7 @@ export class UserTable implements OnInit, OnDestroy {
       });
     });
   }
+
   ngOnInit(): void {
     if (this.fetchUsers) {
       this.fetchUsers(this.userSearchCriteria);
@@ -93,13 +96,36 @@ export class UserTable implements OnInit, OnDestroy {
 
   onSort(column: SortEvent): void {}
 
-  // addAction(userId: number): void {
-  //   this.actionEvent.emit(userId);
-  // }
+  onScroll(event: any): void {
+    const bottom =
+      event.target.scrollHeight ===
+      Math.round(event.target.scrollTop + event.target.clientHeight);
+    if (bottom && !this.isLoading) {
+      this.loadMoreUsers();
+    }
+  }
 
-  // removeAction(userId: number): void {
-  //   this.actionRemoveEvent.emit(userId);
-  // }
+  loadUsers(): void {
+    setTimeout(() => {
+      this.isLoading = false;
+    }, 1000);
+  }
+
+  loadMoreUsers(): void {
+    this.isLoading = true;
+    setTimeout(() => {
+      this.userSearchCriteria.page += 1;
+      console.log(this.totalPages$, 'this.totalPages');
+      if (this.totalPages$ >= this.userSearchCriteria.page) {
+        this.fetchUsers(this.userSearchCriteria);
+      }
+      this.isLoading = false;
+    }, 1000);
+  }
+
+  trackById(index: number, user: any): number {
+    return user.id;
+  }
 
   ngOnDestroy(): void {
     if (this.searchTimeout) {

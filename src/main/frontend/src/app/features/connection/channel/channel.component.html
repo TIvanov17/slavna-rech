@@ -1,12 +1,20 @@
-<h1>Channels</h1>
 <div class="container">
   <div class="sidebar-container">
-    <tabs [friends]="users"></tabs>
+    <tabs
+      [friends]="users"
+      [channels]="channels"
+      (fetchFriends)="fetchFriends()"
+      (fetchChannels)="fetchChannels()"
+      (userSelected)="setSelectedUser($event)"
+      (channelSelected)="setSelectedChannel($event)"
+    ></tabs>
   </div>
   <div class="content-container">
-    <h2>WebSocket Chat</h2>
+    <h2>{{ selectedChannel?.name }}</h2>
     <ul class="message-list">
-      @for(message of messages; track message) {
+      @for(message of historyMessages; track message) {
+      <li>{{ message }}</li>
+      } @for(message of messages; track message) {
       <li>{{ message }}</li>
       }
     </ul>
@@ -14,5 +22,8 @@
       <input [(ngModel)]="message" placeholder="Type a message" />
       <button (click)="sendMessageWithPayload()">Send</button>
     </div>
+  </div>
+  <div class="channel-settings-container">
+    <channel-settings [selectedChannel]="selectedChannel"></channel-settings>
   </div>
 </div>

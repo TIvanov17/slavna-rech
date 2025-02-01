@@ -1,7 +1,25 @@
 <div class="sidebar">
-  <ul class="nav">
-    @for(user of collection; track user) {
-    <li class="nav-item">{{ user.username }} - {{ user.email }}</li>
+  <div class="nav-create-button">
+    @if(isChannel){
+    <button class="btn btn-success" (click)="openChannelModal()">
+      Create Channel
+    </button>
+    <channel-create-modal
+      #channelModal
+      (saveAction)="createChannel()"
+      [channelConnectionRequest]="channelConnectionRequest"
+    ></channel-create-modal>
+    }
+  </div>
+  <ul class="nav-container">
+    @for(user of friends; track user) {
+    <li (click)="selectUser(user)" class="nav-item">
+      {{ user.username }} - {{ user.email }}
+    </li>
+    } @for(user of channels; track user) {
+    <li (click)="selectChannel(user)" class="nav-item">
+      {{ user.name }}
+    </li>
     }
   </ul>
 </div>

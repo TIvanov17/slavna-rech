@@ -9,6 +9,8 @@ import lombok.Data;
 public class MessageResponse {
 
   private Long receiverId;
+  private Long senderId;
+  private Long connectionId;
   private String content;
   private LocalDateTime createdOn;
 }

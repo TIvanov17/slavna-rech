@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import pu.fmi.slavnarech.annotations.ValidRestApi;
+import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;
 import pu.fmi.slavnarech.entities.member.MemberStatus;
 import pu.fmi.slavnarech.entities.user.dtos.UserConnectionResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserRequest;
@@ -39,9 +40,15 @@ public class UserApi {
   }
 
   @GetMapping("/{id}/connections/friends")
-    public ResponseEntity<Page<UserResponse>> listFriendsOfUser(
+    public ResponseEntity<Page<UserConnectionResponse>> listFriendsOfUser(
         @PathVariable Long id, PageFilter pageFilter) {
     return ResponseEntity.ok(userService.getFriendsOfUser(id, pageFilter));
+  }
+
+  @GetMapping("/{id}/connections/channels")
+  public ResponseEntity<Page<ConnectionResponse>> listChannelsOfUser(
+      @PathVariable Long id, PageFilter pageFilter) {
+    return ResponseEntity.ok(userService.getChannelsOfUser(id, pageFilter));
   }
 
   @GetMapping("/{id}/connections/friend-requests")

@@ -54,6 +54,10 @@ public class MessageServiceImpl implements MessageService {
   @Override
   public List<MessageResponse> getHistoryOfMessagesByConnection(Long connectionId) {
     List<Message> messages = messageRepository.findBySenderConnectionId(connectionId);
-    return messages.stream().map(message -> MessageResponse.builder().content(message.getContent()).build()).toList();
+    return messages.stream().map(message ->
+        MessageResponse.builder()
+            .content(message.getContent())
+            .build()
+    ).toList();
   }
 }

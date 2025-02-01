@@ -1,6 +1,5 @@
 .sidebar {
   width: 100%;
-  height: 100%;
   background-color: #f8f9fa;
   border-right: 1px solid #dee2e6;
   padding: 1rem;
@@ -8,6 +7,10 @@
 
 .nav-container {
   list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
 }
 
 .nav-item {

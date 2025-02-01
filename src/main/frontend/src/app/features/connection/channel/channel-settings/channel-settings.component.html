@@ -1,21 +1,23 @@
-<div class="sidebar">
-  <div class="nav-create-button">
-    <button class="btn btn-success" (click)="openChannelModal()">Invite</button>
-    <channel-invites-modal
-      [selectedChannel]="selectedChannel"
-      #channelModal
-    ></channel-invites-modal>
+<div>
+  <div class="sidebar">
+    <div class="nav-create-button">
+      <i class="fa-sharp fa-regular fa-plus" (click)="openChannelModal()"></i>
+      <channel-invites-modal
+        [selectedChannel]="selectedChannel"
+        #channelModal
+      ></channel-invites-modal>
+    </div>
+    <div class="nav-button">
+      <i class="fa-solid fa-pen-to-square" (click)="openUpdateChannel()"></i>
+      <channel-create-modal
+        #updateChannelModal
+        [selectedChannel]="selectedChannel"
+        [channelConnectionRequest]="channelConnectionRequest"
+        (saveAction)="updateChannel()"
+      ></channel-create-modal>
+    </div>
+    <div class="nav-button">
+      <i class="fa-sharp fa-solid fa-trash" (click)="openChannelModal()"></i>
+    </div>
   </div>
-  <div class="nav-create-button">
-    <button class="btn btn-success" (click)="openUpdateChannel()">
-      Update
-    </button>
-    <channel-create-modal
-      #updateChannelModal
-      [selectedChannel]="selectedChannel"
-      [channelConnectionRequest]="channelConnectionRequest"
-      (saveAction)="updateChannel()"
-    ></channel-create-modal>
-  </div>
-  <button class="btn btn-success" (click)="openChannelModal()">Delete</button>
 </div>

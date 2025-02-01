@@ -86,3 +86,51 @@
 .message-input button:hover {
   background-color: #0056b3;
 }
+
+.accordion-button {
+  font-size: 30px;
+}
+
+.accordion-body {
+  font-size: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.accordion-body-description {
+  font-size: 12px;
+  color: darkgray;
+}
+
+.members-container {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.member {
+  display: flex;
+  align-items: baseline;
+  margin-left: 1rem;
+  padding: 1rem;
+  width: 11.5rem;
+}
+.members-username {
+  cursor: pointer;
+  color: #495057;
+  border-radius: 4px;
+  margin-left: 2rem;
+  display: flex;
+}
+
+.member:hover {
+  background-color: #e9ecef;
+}
+
+.member.active {
+  background-color: #007bff;
+  color: #fff;
+  font-weight: bold;
+}

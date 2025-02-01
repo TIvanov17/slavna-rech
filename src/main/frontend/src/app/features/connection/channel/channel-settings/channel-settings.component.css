@@ -1,9 +1,11 @@
 .sidebar {
   width: 100%;
-  height: 100%;
   background-color: #f8f9fa;
   border-right: 1px solid #dee2e6;
-  padding: 1rem;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .nav-container {
@@ -29,6 +31,13 @@
 }
 
 .nav-create-button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+  font-size: 2rem;
+}
+.nav-button {
   display: flex;
   justify-content: center;
   align-items: center;

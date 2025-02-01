@@ -6,8 +6,10 @@
   [destroyOnHide]="false"
   class="nav-tabs"
 >
-  <li [ngbNavItem]="1">
-    <button ngbNavLink (click)="onTabChange('friends')">Friends</button>
+  <li [ngbNavItem]="SidebarMenu.FRIENDS">
+    <button ngbNavLink (click)="onTabChange(SidebarMenu.FRIENDS)">
+      Friends
+    </button>
     <ng-template ngbNavContent>
       <sidebar
         [friends]="friends"
@@ -15,13 +17,16 @@
       ></sidebar>
     </ng-template>
   </li>
-  <li [ngbNavItem]="2" [destroyOnHide]="true">
-    <button ngbNavLink (click)="onTabChange('channels')">Channels</button>
+  <li [ngbNavItem]="SidebarMenu.CHANNELS" [destroyOnHide]="true">
+    <button ngbNavLink (click)="onTabChange(SidebarMenu.CHANNELS)">
+      Channels
+    </button>
     <ng-template ngbNavContent>
       <sidebar
         [channels]="channels"
         [isChannel]="true"
         (channelSelected)="onChannelSelected($event)"
+        (fetchChannels)="onChannelCreated()"
       ></sidebar>
     </ng-template>
   </li>

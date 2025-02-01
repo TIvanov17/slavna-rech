@@ -7,10 +7,34 @@
       (fetchChannels)="fetchChannels()"
       (userSelected)="setSelectedUser($event)"
       (channelSelected)="setSelectedChannel($event)"
+      (selectTab)="onTabChange($event)"
     ></tabs>
   </div>
   <div class="content-container">
-    <h2>{{ selectedChannel?.name }}</h2>
+    @if(users.length == 0 && selectedTab == SidebarMenu.FRIENDS){
+    <h3>No friends</h3>
+    } @else if(channels.length == 0 && selectedTab == SidebarMenu.CHANNELS){
+    <h3>No channels</h3>
+    }@else {
+    <h2>
+      <div ngbAccordion>
+        <div ngbAccordionItem>
+          <h2 ngbAccordionHeader class="channel-title">
+            <button ngbAccordionButton>{{ selectedChannel?.name }}</button>
+          </h2>
+          <div ngbAccordionCollapse>
+            <div ngbAccordionBody>
+              <span class="accordion-body-description">Description:</span>
+              <span>{{ selectedChannel?.description }}</span>
+              <span class="accordion-body-description">Created On:</span>
+              <span>{{
+                selectedChannel?.createdOn | date : "dd/MM/yyyy"
+              }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </h2>
     <ul class="message-list">
       @for(message of historyMessages; track message) {
       <li>{{ message }}</li>
@@ -19,11 +43,29 @@
       }
     </ul>
     <div class="message-input">
-      <input [(ngModel)]="message" placeholder="Type a message" />
+      <input
+        [(ngModel)]="message"
+        placeholder="Type a message"
+        (keydown.enter)="sendMessageWithPayload()"
+      />
       <button (click)="sendMessageWithPayload()">Send</button>
     </div>
+    }
   </div>
+  @if (selectedTab == SidebarMenu.CHANNELS) {
   <div class="channel-settings-container">
     <channel-settings [selectedChannel]="selectedChannel"></channel-settings>
+    <ul class="members-container">
+      @for(member of selectedChannel?.members; track member) {
+      <div class="member">
+        <i class="fa-solid fa-user"></i>
+        <li class="members-username">
+          {{ member.username }}
+        </li>
+      </div>
+
+      }
+    </ul>
   </div>
+  }
 </div>

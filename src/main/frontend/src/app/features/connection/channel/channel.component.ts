@@ -12,28 +12,40 @@ import { PageFilter } from '../../../models/page.modes';
 import { MessageService } from '../../../services/message.service';
 import { ConnectionResponse } from '../../../models/connection.modes';
 import { ChannelSettings } from './channel-settings/channel-settings.component';
+import { SidebarMenu } from '../../../enums/sidebar-menu.enum';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   templateUrl: './channel.component.html',
   styleUrl: './channel.component.css',
-  imports: [FormsModule, Tabs, ChannelSettings],
+  imports: [
+    FormsModule,
+    Tabs,
+    ChannelSettings,
+    NgbAccordionModule,
+    CommonModule,
+  ],
 })
 export class ChannelPage implements OnInit, OnDestroy {
+  SidebarMenu = SidebarMenu;
   message: string = '';
   messages: string[] = [];
 
   users: UserConnectionResponse[] = [];
   channels: ConnectionResponse[] = [];
 
+  selectedTab: SidebarMenu | null = SidebarMenu.FRIENDS;
+
+  selectedUser: UserConnectionResponse | null = null;
+  selectedChannel: ConnectionResponse | null = null;
+
   private subscription: Subscription | undefined;
   private webSocketService = inject(WebSocketService);
   private userService = inject(UserService);
   private globalStateService = inject(GlobalStateService);
   private messageService = inject(MessageService);
-
-  selectedUser: UserConnectionResponse | null = null;
-  selectedChannel: ConnectionResponse | null = null;
 
   historyMessages: string[] = [];
 
@@ -51,6 +63,15 @@ export class ChannelPage implements OnInit, OnDestroy {
     });
     this.fetchFriends();
     this.fetchChannels();
+  }
+
+  onTabChange(tab: SidebarMenu): void {
+    this.selectedTab = tab;
+    if (tab === SidebarMenu.FRIENDS) {
+      this.fetchFriends();
+    } else if (tab === SidebarMenu.CHANNELS) {
+      this.fetchChannels();
+    }
   }
 
   fetchFriends() {

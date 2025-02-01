@@ -1,12 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { Sidebar } from '../sidebar/sidebar.component';
-import { UserConnectionResponse, UserResponse } from '../../models/user.models';
+import { UserConnectionResponse } from '../../models/user.models';
 import { TextInput } from '../text-input/text-input.component';
-import {
-  ChannelConnectionRequest,
-  ConnectionResponse,
-} from '../../models/connection.modes';
+import { ConnectionResponse } from '../../models/connection.modes';
+import { SidebarMenu } from '../../enums/sidebar-menu.enum';
 
 @Component({
   standalone: true,
@@ -16,7 +14,8 @@ import {
   styleUrl: './tab.component.css',
 })
 export class Tabs {
-  active = 1;
+  SidebarMenu = SidebarMenu;
+  active: SidebarMenu = SidebarMenu.FRIENDS;
   @Input() friends: UserConnectionResponse[] = [];
   @Input() channels: ConnectionResponse[] = [];
 
@@ -24,6 +23,7 @@ export class Tabs {
   @Output() channelSelected = new EventEmitter<ConnectionResponse>();
   @Output() fetchFriends = new EventEmitter<void>();
   @Output() fetchChannels = new EventEmitter<void>();
+  @Output() selectTab = new EventEmitter<SidebarMenu>();
 
   onUserSelected(user: UserConnectionResponse): void {
     this.userSelected.emit(user);
@@ -33,11 +33,11 @@ export class Tabs {
     this.channelSelected.emit(channel);
   }
 
-  onTabChange(tab: string): void {
-    if (tab === 'friends') {
-      this.fetchFriends.emit();
-    } else if (tab === 'channels') {
-      this.fetchChannels.emit();
-    }
+  onChannelCreated(): void {
+    this.fetchChannels.emit();
+  }
+
+  onTabChange(tab: SidebarMenu): void {
+    this.selectTab.emit(tab);
   }
 }

@@ -31,12 +31,17 @@ import {
   imports: [NgbModule, ChannelCreateModal],
 })
 export class Sidebar {
+  // private selectedUserId: UserConnectionResponse | null = null;
+  // private selectedChannel: ConnectionResponse | null = null;
+  // private isModalOpen = false;
+
   @Input() isChannel: boolean = false;
   @Input() friends: any[] = [];
   @Input() channels: any[] = [];
   @Output() tabSelected = new EventEmitter<string>();
   @Output() userSelected = new EventEmitter<UserConnectionResponse>();
   @Output() channelSelected = new EventEmitter<ConnectionResponse>();
+  @Output() fetchChannels = new EventEmitter<void>();
 
   @ViewChild('channelModal') channelModal!: ChannelCreateModal;
 
@@ -65,21 +70,18 @@ export class Sidebar {
         .createChannel(this.channelConnectionRequest)
         .subscribe((data) => {
           console.log(data);
+          this.fetchChannels.emit();
         });
     }
   }
 
-  selectedUserId: UserConnectionResponse | null = null;
-  selectedChannel: ConnectionResponse | null = null;
-  isModalOpen = false;
-
   selectUser(user: UserConnectionResponse): void {
-    this.selectedUserId = user;
+    // this.selectedUserId = user;
     this.userSelected.emit(user);
   }
 
   selectChannel(channel: ConnectionResponse): void {
-    this.selectedChannel = channel;
+    // this.selectedChannel = channel;
     this.channelSelected.emit(channel);
   }
 }

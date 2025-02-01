@@ -36,18 +36,48 @@
       </div>
     </h2>
     <ul class="message-list">
-      @for(message of historyMessages; track message) {
-      <li>{{ message }}</li>
+      @for (message of historyMessages; track message) {
+      <li
+        [class.me]="message.sender.id === userId"
+        [class.other]="message.sender.id !== userId"
+      >
+        <div class="message-content">
+          <div class="message-info">
+            <span class="message-username">{{ message.sender.username }} </span>
+            <span class="message-date"> {{ message.createdOn }}</span>
+          </div>
+          <span
+            class="message-text"
+            [innerHTML]="formatMessage(message.content)"
+          ></span>
+        </div>
+      </li>
       } @for(message of messages; track message) {
-      <li>{{ message }}</li>
+      <li
+        [class.me]="message.sender.id === userId"
+        [class.other]="message.sender.id !== userId"
+      >
+        <div class="message-content">
+          <div class="message-info">
+            <span class="message-username">{{ message.sender.username }} </span>
+            <span class="message-date"> {{ message.createdOn }}</span>
+          </div>
+          <span
+            class="message-text"
+            [innerHTML]="formatMessage(message.content)"
+          ></span>
+        </div>
+      </li>
       }
     </ul>
     <div class="message-input">
-      <input
+      <textarea
         [(ngModel)]="message"
         placeholder="Type a message"
-        (keydown.enter)="sendMessageWithPayload()"
-      />
+        (keydown)="onKeyDown($event)"
+        rows="3"
+        style="resize: none"
+      ></textarea>
       <button (click)="sendMessageWithPayload()">Send</button>
     </div>
     }

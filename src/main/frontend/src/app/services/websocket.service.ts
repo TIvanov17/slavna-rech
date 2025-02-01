@@ -2,11 +2,8 @@ import { inject, Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import SockJS from 'sockjs-client/dist/sockjs';
 import { Stomp } from '@stomp/stompjs';
-import { JWTService } from './jwt.service';
 import { GlobalStateService } from './global-state.service';
 import { UserService } from './user.service';
-import { HttpParams } from '@angular/common/http';
-import { PageFilter } from '../models/page.modes';
 
 @Injectable({
   providedIn: 'root',
@@ -51,10 +48,6 @@ export class WebSocketService {
         //   });
       }
     });
-  }
-
-  private getHttpParams() {
-    return new HttpParams().set('page', 1).set('pageSize', 1000);
   }
 
   sendMessage(destination: string, message: string): void {

@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { MessageResponse } from '../models/message.model';
+import { MessageDTO } from '../models/message.model';
 
 @Injectable({
   providedIn: 'root',
@@ -11,6 +11,6 @@ export class MessageService {
 
   public getMessageForConnection(connectionId: number) {
     const params = new HttpParams().set('connectionId', connectionId);
-    return this.httpClient.get<MessageResponse[]>(this.baseUrl, { params });
+    return this.httpClient.get<MessageDTO[]>(this.baseUrl, { params });
   }
 }

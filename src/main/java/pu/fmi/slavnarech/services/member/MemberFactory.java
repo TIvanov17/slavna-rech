@@ -13,7 +13,8 @@ import pu.fmi.slavnarech.entities.user.User;
 @Component
 public class MemberFactory {
 
-  public Member mapToEntity(User user, Connection connection, Role role, MemberStatus memberStatus) {
+  public Member mapToEntity(
+      User user, Connection connection, Role role, MemberStatus memberStatus) {
     return Member.builder()
         .id(new MemberId(user.getId(), connection.getId()))
         .user(user)

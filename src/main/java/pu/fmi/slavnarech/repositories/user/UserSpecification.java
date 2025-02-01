@@ -1,7 +1,6 @@
 package pu.fmi.slavnarech.repositories.user;
 
 import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import org.springframework.data.jpa.domain.Specification;
@@ -41,22 +40,20 @@ public class UserSpecification {
 
       subquery.select(userSubquery.get(User_.id));
       subquery.where(
-          criteriaBuilder.equal(connectionJoin.get(Connection_.id),
-              connectionSubquery.get(Connection_.id)),
-          criteriaBuilder.notEqual(memberSubquery.get(Member_.user).get(User_.id),
-              root.get(User_.id)),
-          criteriaBuilder.equal(memberSubquery.get(Member_.status), MemberStatus.ACCEPTED)
-      );
+          criteriaBuilder.equal(
+              connectionJoin.get(Connection_.id), connectionSubquery.get(Connection_.id)),
+          criteriaBuilder.notEqual(
+              memberSubquery.get(Member_.user).get(User_.id), root.get(User_.id)),
+          criteriaBuilder.equal(memberSubquery.get(Member_.status), MemberStatus.ACCEPTED));
 
       return criteriaBuilder.and(
           criteriaBuilder.exists(subquery),
           criteriaBuilder.equal(memberJoin.get(Member_.status), MemberStatus.ACCEPTED),
-          criteriaBuilder.notEqual(root.get(User_.id), id)
-      );
+          criteriaBuilder.notEqual(root.get(User_.id), id));
     });
   }
 
-  public static Specification<User> hasFriendsRequest(Long id){
+  public static Specification<User> hasFriendsRequest(Long id) {
 
     return ((root, query, criteriaBuilder) -> {
       query.distinct(true);
@@ -80,7 +77,6 @@ public class UserSpecification {
       return criteriaBuilder.and(
           criteriaBuilder.in(root.get(User_.id)).value(subquery),
           criteriaBuilder.notEqual(root.get(User_.id), id));
-
     });
   }
 }

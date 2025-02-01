@@ -12,8 +12,7 @@ import pu.fmi.slavnarech.repositories.MemberRepository;
 @Service
 public class MemberServiceImpl implements MemberService {
 
-  @Autowired
-  private MemberRepository memberRepository;
+  @Autowired private MemberRepository memberRepository;
 
   @Override
   public MemberResponse createMember(User user, Connection connection, Role role) {

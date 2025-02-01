@@ -1,6 +1,5 @@
 package pu.fmi.slavnarech.services.user;
 
-import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,12 +37,13 @@ public class UserServiceImpl implements UserService {
   @Override
   public Page<UserResponse> searchAllByUsername(PageFilter pageFilter) {
 
-    if(pageFilter == null){
+    if (pageFilter == null) {
       pageFilter = new PageFilter();
     }
 
     Page<User> page =
-        userRepository.findAll(UserSpecification.searchByUsernameOrEmail(pageFilter.getSearchKeyword()), pageFilter);
+        userRepository.findAll(
+            UserSpecification.searchByUsernameOrEmail(pageFilter.getSearchKeyword()), pageFilter);
 
     return page.map(user -> userMapper.mapToResponseDTO(user));
   }
@@ -89,17 +89,16 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<UserConnectionResponse> getFriendsOfUser(Long id, PageFilter pageFilter) {
-    if(pageFilter == null){
+    if (pageFilter == null) {
       pageFilter = new PageFilter();
     }
 
     return userRepository.getFriendsOfUser(id, pageFilter);
   }
 
-
   @Override
   public Page<ConnectionResponse> getChannelsOfUser(Long id, PageFilter pageFilter) {
-    if(pageFilter == null){
+    if (pageFilter == null) {
       pageFilter = new PageFilter();
     }
 
@@ -109,7 +108,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public Page<UserResponse> getFriendRequestsSendFromUser(Long id, PageFilter pageFilter) {
-    if(pageFilter == null){
+    if (pageFilter == null) {
       pageFilter = new PageFilter();
     }
 
@@ -118,8 +117,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public Page<UserConnectionResponse> getFriendInvitesReceivedForUser(Long id, PageFilter pageFilter) {
-    if(pageFilter == null){
+  public Page<UserConnectionResponse> getFriendInvitesReceivedForUser(
+      Long id, PageFilter pageFilter) {
+    if (pageFilter == null) {
       pageFilter = new PageFilter();
     }
 

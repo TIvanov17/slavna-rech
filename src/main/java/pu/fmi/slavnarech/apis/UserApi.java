@@ -40,8 +40,8 @@ public class UserApi {
   }
 
   @GetMapping("/{id}/connections/friends")
-    public ResponseEntity<Page<UserConnectionResponse>> listFriendsOfUser(
-        @PathVariable Long id, PageFilter pageFilter) {
+  public ResponseEntity<Page<UserConnectionResponse>> listFriendsOfUser(
+      @PathVariable Long id, PageFilter pageFilter) {
     return ResponseEntity.ok(userService.getFriendsOfUser(id, pageFilter));
   }
 

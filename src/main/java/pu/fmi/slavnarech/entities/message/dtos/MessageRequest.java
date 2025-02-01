@@ -12,5 +12,4 @@ public class MessageRequest {
   private Long connectionId;
 
   private String content;
-
 }

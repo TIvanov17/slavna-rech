@@ -1,6 +1,5 @@
 package pu.fmi.slavnarech.services.user;
 
-import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import pu.fmi.slavnarech.entities.connection.dtos.ConnectionResponse;

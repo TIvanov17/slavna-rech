@@ -3,7 +3,6 @@ package pu.fmi.slavnarech.services.user;
 import java.time.LocalDate;
 import org.springframework.stereotype.Component;
 import pu.fmi.slavnarech.entities.user.User;
-import pu.fmi.slavnarech.entities.user.dtos.UserConnectionResponse;
 import pu.fmi.slavnarech.entities.user.dtos.UserResponse;
 
 @Component
@@ -29,9 +28,9 @@ public class UserMapper {
         .build();
   }
 
-//  public UserConnectionResponse mapToResponseDTO(User user) {
-//    return UserConnectionResponse.builder()
-//        .userResponse(mapToResponseDTO(user))
-//        .build();
-//  }
+  //  public UserConnectionResponse mapToResponseDTO(User user) {
+  //    return UserConnectionResponse.builder()
+  //        .userResponse(mapToResponseDTO(user))
+  //        .build();
+  //  }
 }

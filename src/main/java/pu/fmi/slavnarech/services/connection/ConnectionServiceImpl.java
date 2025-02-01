@@ -62,18 +62,24 @@ public class ConnectionServiceImpl implements ConnectionService {
     return connectionFactory.mapToResponse(connection);
   }
 
-
   @Override
   public ConnectionResponse updateChannel(UpdateChannelRequest updateChannelRequest) {
-    Optional<Connection> optionalConnection = connectionRepository.findById(updateChannelRequest.getConnectionId());
+    Optional<Connection> optionalConnection =
+        connectionRepository.findById(updateChannelRequest.getConnectionId());
 
     AtomicReference<ConnectionResponse> connectionResponse = new AtomicReference<>();
-    optionalConnection.ifPresentOrElse(connection -> {
-      updateIfChanged(connection.getName(), updateChannelRequest.getName(), connection::setName);
-      updateIfChanged(connection.getDescription(), updateChannelRequest.getDescription(), connection::setDescription);
-      connectionRepository.save(connection);
-      connectionResponse.set(connectionFactory.mapToResponse(connection));
-    }, () -> {});
+    optionalConnection.ifPresentOrElse(
+        connection -> {
+          updateIfChanged(
+              connection.getName(), updateChannelRequest.getName(), connection::setName);
+          updateIfChanged(
+              connection.getDescription(),
+              updateChannelRequest.getDescription(),
+              connection::setDescription);
+          connectionRepository.save(connection);
+          connectionResponse.set(connectionFactory.mapToResponse(connection));
+        },
+        () -> {});
 
     return connectionResponse.get();
   }
@@ -92,8 +98,10 @@ public class ConnectionServiceImpl implements ConnectionService {
     connection = connectionRepository.save(connection);
 
     Role friendRole = roleService.getByName(RoleName.FRIEND);
-    Member senderMember = memberFactory.mapToEntity(userSender, connection, friendRole, MemberStatus.ACCEPTED);
-    Member receiverMember = memberFactory.mapToEntity(userReceiver, connection, friendRole, MemberStatus.INVITED);
+    Member senderMember =
+        memberFactory.mapToEntity(userSender, connection, friendRole, MemberStatus.ACCEPTED);
+    Member receiverMember =
+        memberFactory.mapToEntity(userReceiver, connection, friendRole, MemberStatus.INVITED);
 
     connection.setMembers(
         List.of(memberRepository.save(senderMember), memberRepository.save(receiverMember)));
@@ -105,12 +113,12 @@ public class ConnectionServiceImpl implements ConnectionService {
   public ConnectionResponse addUserToChannel(Long connectionId, Long userId) {
 
     User user = userService.getById(userId);
-    if(user == null){
+    if (user == null) {
       return null;
     }
 
     Optional<Connection> optionalConnection = connectionRepository.findById(connectionId);
-    if(optionalConnection.isEmpty()){
+    if (optionalConnection.isEmpty()) {
       return null;
     }
 
@@ -119,12 +127,13 @@ public class ConnectionServiceImpl implements ConnectionService {
             .filter(member -> member.getUser().getId().equals(user.getId()))
             .findFirst();
 
-    if(existMember.isPresent()){
+    if (existMember.isPresent()) {
       return null;
     }
 
     Role roleGuess = roleService.getByName(RoleName.GUESS);
-    Member member = memberFactory.mapToEntity(user, optionalConnection.get(), roleGuess, MemberStatus.ACCEPTED);
+    Member member =
+        memberFactory.mapToEntity(user, optionalConnection.get(), roleGuess, MemberStatus.ACCEPTED);
     optionalConnection.get().getMembers().add(memberRepository.save(member));
 
     return connectionFactory.mapToResponse(optionalConnection.get());

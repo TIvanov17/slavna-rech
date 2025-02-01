@@ -50,10 +50,7 @@ public class SecurityConfig {
         .authenticationProvider(authenticationProvider)
         .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
         .csrf(AbstractHttpConfigurer::disable)
-        .headers(headers -> headers
-            .frameOptions(FrameOptionsConfig::sameOrigin
-            )
-        )
+        .headers(headers -> headers.frameOptions(FrameOptionsConfig::sameOrigin))
         .build();
   }
 }

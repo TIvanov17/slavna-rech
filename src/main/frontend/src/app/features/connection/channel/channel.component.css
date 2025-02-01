@@ -50,10 +50,71 @@
   background-color: #fff;
   max-height: 70vh;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
 .message-list li {
-  margin-bottom: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  max-width: 70%;
+  word-wrap: break-word;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.message-list .me {
+  align-self: flex-end;
+  background-color: #c3e2ff;
+  color: #333;
+  border-radius: 12px 12px 0 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message-list .other {
+  align-self: flex-start;
+  background-color: #f5f5f5;
+  color: #333;
+  border-radius: 0 12px 12px 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.message-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.message-info {
+  display: flex;
+  flex-direction: row;
+  gap: 0.2rem;
+  align-items: baseline;
+}
+.message-username {
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+  font-size: 0.9rem;
+  text-transform: capitalize;
+}
+
+.message-date {
+  color: #2c3e50;
+  margin-bottom: 0.25rem;
+  font-size: 0.7rem;
+  text-transform: capitalize;
+}
+
+.message-text {
+  font-size: 1rem;
+  line-height: 1.4;
+  color: #333;
+}
+.message-text {
+  font-size: 1rem;
 }
 
 .message-input {
@@ -63,7 +124,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.message-input input {
+.message-input textarea {
   flex-grow: 1;
   padding: 0.5rem;
   font-size: 1rem;

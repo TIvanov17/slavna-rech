@@ -6,58 +6,54 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pu.fmi.slavnarech.entities.member.Member;
 import pu.fmi.slavnarech.entities.message.Message;
+import pu.fmi.slavnarech.entities.message.dtos.MessageDTO;
 import pu.fmi.slavnarech.entities.message.dtos.MessageRequest;
-import pu.fmi.slavnarech.entities.message.dtos.MessageResponse;
 import pu.fmi.slavnarech.entities.user.User;
-import pu.fmi.slavnarech.repositories.MessageRepository;
+import pu.fmi.slavnarech.repositories.message.MessageRepository;
 import pu.fmi.slavnarech.services.connection.ConnectionService;
 import pu.fmi.slavnarech.services.member.MemberService;
+import pu.fmi.slavnarech.services.user.UserMapper;
 import pu.fmi.slavnarech.services.user.UserService;
 
 @Service
 public class MessageServiceImpl implements MessageService {
 
-  @Autowired
-  private UserService userService;
+  @Autowired private UserService userService;
 
-  @Autowired
-  private ConnectionService connectionService;
+  @Autowired private ConnectionService connectionService;
 
-  @Autowired
-  private MemberService memberService;
+  @Autowired private MemberService memberService;
 
-  @Autowired
-  private MessageRepository messageRepository;
+  @Autowired private MessageRepository messageRepository;
+
+  @Autowired private UserMapper userMapper;
 
   @Override
-  public MessageResponse createMessage(MessageRequest messageRequest) {
+  public MessageDTO createMessage(MessageRequest messageRequest) {
 
     User userSender = userService.getById(messageRequest.getSenderId());
-    Member member = memberService.getByUserAndConnection(userSender.getId(), messageRequest.getConnectionId());
+    Member member =
+        memberService.getByUserAndConnection(userSender.getId(), messageRequest.getConnectionId());
 
-    Message message = Message.builder()
-        .sender(member)
-        .content(messageRequest.getContent())
-        .createdOn(LocalDateTime.now())
-        .isActive(Boolean.TRUE)
-        .build();
+    Message message =
+        Message.builder()
+            .sender(member)
+            .content(messageRequest.getContent())
+            .createdOn(LocalDateTime.now())
+            .isActive(Boolean.TRUE)
+            .build();
 
     messageRepository.save(message);
 
-    return MessageResponse.builder()
-        .receiverId(2L)
+    return MessageDTO.builder()
+        .sender(userMapper.mapToResponseDTO(userSender))
         .content(message.getContent())
         .createdOn(message.getCreatedOn())
         .build();
   }
 
   @Override
-  public List<MessageResponse> getHistoryOfMessagesByConnection(Long connectionId) {
-    List<Message> messages = messageRepository.findBySenderConnectionId(connectionId);
-    return messages.stream().map(message ->
-        MessageResponse.builder()
-            .content(message.getContent())
-            .build()
-    ).toList();
+  public List<MessageDTO> getHistoryOfMessagesByConnection(Long connectionId) {
+    return messageRepository.findByConnectionId(connectionId);
   }
 }

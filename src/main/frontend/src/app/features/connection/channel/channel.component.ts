@@ -6,7 +6,7 @@ import { UserService } from '../../../services/user.service';
 import { UserConnectionResponse } from '../../../models/user.models';
 import { Tabs } from '../../../components/tabs/tab.component';
 import { GlobalStateService } from '../../../services/global-state.service';
-import { MessageRequest } from '../../../models/message.model';
+import { MessageDTO, MessageRequest } from '../../../models/message.model';
 import { HttpParams } from '@angular/common/http';
 import { PageFilter } from '../../../models/page.modes';
 import { MessageService } from '../../../services/message.service';
@@ -31,7 +31,7 @@ import { CommonModule } from '@angular/common';
 export class ChannelPage implements OnInit, OnDestroy {
   SidebarMenu = SidebarMenu;
   message: string = '';
-  messages: string[] = [];
+  messages: MessageDTO[] = [];
 
   users: UserConnectionResponse[] = [];
   channels: ConnectionResponse[] = [];
@@ -47,7 +47,8 @@ export class ChannelPage implements OnInit, OnDestroy {
   private globalStateService = inject(GlobalStateService);
   private messageService = inject(MessageService);
 
-  historyMessages: string[] = [];
+  historyMessages: MessageDTO[] = [];
+  userId = this.globalStateService.userDetails?.currentUser.id;
 
   @Input() userSearchCriteria: PageFilter = {
     page: 1,
@@ -58,9 +59,12 @@ export class ChannelPage implements OnInit, OnDestroy {
   };
 
   ngOnInit() {
-    this.subscription = this.webSocketService.getMessages().subscribe((msg) => {
-      this.messages.push(msg);
-    });
+    this.subscription = this.webSocketService
+      .getMessages()
+      .subscribe((data) => {
+        const messageDTO: MessageDTO = JSON.parse(data);
+        this.messages.push(messageDTO);
+      });
     this.fetchFriends();
     this.fetchChannels();
   }
@@ -125,15 +129,18 @@ export class ChannelPage implements OnInit, OnDestroy {
     this.webSocketService.disconnect();
 
     this.webSocketService.connect(user.connectionId);
-    this.subscription = this.webSocketService.getMessages().subscribe((msg) => {
-      this.messages.push(msg);
-    });
+    this.subscription = this.webSocketService
+      .getMessages()
+      .subscribe((data) => {
+        const messageDTO: MessageDTO = JSON.parse(data);
+        this.messages.push(messageDTO);
+      });
 
     this.messageService
       .getMessageForConnection(user.connectionId)
       .subscribe((data) => {
-        const contentString = data.map((message) => message.content);
-        this.historyMessages = contentString;
+        // const contentString = data.map((message) => message.content);
+        this.historyMessages = data;
       });
   }
 
@@ -148,15 +155,18 @@ export class ChannelPage implements OnInit, OnDestroy {
     }
     this.webSocketService.disconnect();
     this.webSocketService.connect(channel.id);
-    this.subscription = this.webSocketService.getMessages().subscribe((msg) => {
-      this.messages.push(msg);
-    });
+    this.subscription = this.webSocketService
+      .getMessages()
+      .subscribe((data) => {
+        const messageDTO: MessageDTO = JSON.parse(data);
+        this.messages.push(messageDTO);
+      });
 
     this.messageService
       .getMessageForConnection(channel.id)
       .subscribe((data) => {
-        const contentString = data.map((message) => message.content);
-        this.historyMessages = contentString;
+        // const contentString = data.map((message) => message.content);
+        this.historyMessages = data;
       });
   }
 
@@ -176,6 +186,20 @@ export class ChannelPage implements OnInit, OnDestroy {
       );
       this.message = '';
     }
+  }
+
+  onKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if (event.shiftKey) {
+        return;
+      }
+      event.preventDefault();
+      this.sendMessageWithPayload();
+    }
+  }
+
+  formatMessage(content: string): string {
+    return content.replace(/\n/g, '<br/>');
   }
 
   ngOnDestroy() {

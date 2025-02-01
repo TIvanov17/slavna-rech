@@ -28,7 +28,8 @@ public class ConnectionApi {
   }
 
   @PutMapping("/channel")
-  public ResponseEntity<ConnectionResponse> updateChannel(@RequestBody UpdateChannelRequest updateChannelRequest) {
+  public ResponseEntity<ConnectionResponse> updateChannel(
+      @RequestBody UpdateChannelRequest updateChannelRequest) {
     return ResponseEntity.ok(connectionService.updateChannel(updateChannelRequest));
   }
 
@@ -42,10 +43,10 @@ public class ConnectionApi {
   }
 
   @PutMapping("/channels/{connectionId}/user/{userId}")
-  public ResponseEntity<ConnectionResponse> addUserToChannel(@PathVariable Long connectionId, @PathVariable Long userId) {
+  public ResponseEntity<ConnectionResponse> addUserToChannel(
+      @PathVariable Long connectionId, @PathVariable Long userId) {
 
-    return ResponseEntity.ok(
-        connectionService.addUserToChannel(connectionId, userId));
+    return ResponseEntity.ok(connectionService.addUserToChannel(connectionId, userId));
   }
 
   @GetMapping("/{id}")
